@@ -1,0 +1,78 @@
+﻿@model Sotis2.Models.DTO.QuestionWithAnswaresDTO
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+
+
+<h4>Question</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="QuestionText" class="control-label"></label>
+                <input asp-for="QuestionText" class="form-control" />
+                <!--<span asp-validation-for="QuestionText" class="text-danger"></span>-->
+            </div>
+            <div>
+                <ul asp-for="Answares" id="myList">
+                </ul>
+
+                <button onclick="myFunction()">Try it</button>
+
+                <script>
+                    var staticVar = 0;
+
+                    function myFunction() {
+
+                        var addBreak = document.createElement("br");
+                        document.getElementById("myList").appendChild(addBreak);
+
+                        var addBreak2 = document.createElement("br");
+                        document.getElementById("myList").appendChild(addBreak2);
+
+                        var addAnswareCounter = document.createElement("label");
+                        addAnswareCounter.textContent = "Answare " + ++staticVar + " : ";
+                        document.getElementById("myList").appendChild(addAnswareCounter);
+
+                        var node = document.createElement("input");
+                        node.type = "text";
+                        node.className = "form-control";
+
+                        document.getElementById("myList").appendChild(node);
+
+                        var addCheakBox = document.createElement("input");
+                        addCheakBox.type = "checkbox";
+                        document.getElementById("myList").appendChild(addCheakBox);
+
+                        var addlabel = document.createElement("label");
+                        addlabel.textContent = "True";
+                        document.getElementById("myList").appendChild(addlabel);
+
+                    }
+                </script>
+            </div>
+
+            <!--<div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>-->
+        </form>
+
+
+    </div>
+</div>
+
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

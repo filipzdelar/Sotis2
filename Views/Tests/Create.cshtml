@@ -1,0 +1,109 @@
+﻿@model Sotis2.Models.DTO.TestDTO
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Test</h4>
+
+<ul id="myList">
+</ul>
+
+<p>Click the button to append an item to the end of the list.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<script>
+
+    
+
+    function addAnswareInput() {
+        alert("Adding")
+        var node = document.createElement("input");
+        node.type = "text";
+        node.className = "form-control";
+
+        document.getElementById("myList").appendChild(node);
+
+        var addBreak3 = document.createElement("br");
+        document.getElementById("myList").appendChild(addBreak3);
+
+        var addBreak4 = document.createElement("br");
+        document.getElementById("myList").appendChild(addBreak4);
+
+    }
+
+    var staticVar = 0;
+
+     function myFunction() {
+
+
+        var node = document.createElement("input");
+        node.type = "text";
+        node.className = "form-control";
+
+        document.getElementById("myList").appendChild(node);
+
+        var addBreak = document.createElement("br");
+        document.getElementById("myList").appendChild(addBreak);
+
+        var addBreak2 = document.createElement("br");
+        document.getElementById("myList").appendChild(addBreak2);
+
+
+        var addAnswares = document.createElement("button");
+        addAnswares.textContent = "Add Answare" + (++staticVar);
+        addAnswares.onclick = function () { addAnswareInput(); }
+        document.getElementById("myList").appendChild(addAnswares);
+    }
+</script>
+
+<p><strong>Note:</strong><br>First create an LI node,<br> then create a Text node,<br> then append the Text node to the LI node.<br>Finally append the LI node to the list.</p>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TestDuration" class="control-label"></label>
+                <input asp-for="TestDuration" type="time" class="form-control" />
+                <span asp-validation-for="TestDuration" class="text-danger"></span>
+            </div>
+
+
+
+
+            <!--
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                <div class="form-group">
+                    <label asp-for="@Model.Questions[i].QuestionText" class="control-label"></label>
+                    <input asp-for="@Model.Questions[i].QuestionText" class="form-control" />
+                    <span asp-validation-for="@Model.Questions[i].QuestionText" class="text-danger"></span>
+                </div>
+            }
+
+            <div class="form-group">
+                <button type="button" asp-route="/Tests/AddQuestion/@Model.Questions[Model.Questions.Count-1].QuestionText" class="btn btn-primary" />
+            </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>-->
+
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
