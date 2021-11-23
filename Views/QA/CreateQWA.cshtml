@@ -1,0 +1,60 @@
+﻿@model Sotis2.Models.DTO.QuestionWithAnswaresDTO
+
+<form asp-action="AddAnsware" method="post">
+    <div id="editorRows">
+        <input type="hidden" name="" value="@Model.Answares" />
+        @foreach (var item in Model.Answares)
+        {
+            <partial name="_AnswareEditor" model="item" />
+        }
+    </div>
+    <a id="addItem" asp-action="BlankAnsware" asp-controller="Questions">Add Answare...</a>
+    <br />
+    <input type="submit" id="submit" value="Finished" />
+</form>
+
+@section scripts {
+    <script>
+        $("#submit").click(function (e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            $("input[name='AnswareText']").each(function (i) {
+                var AudioSelected = $(this).val();
+                formData.append("Sentences[" + i + "].AnswareText", AnswareText);
+
+            });
+            $("input[name='IsItTrue']").each(function (i) {
+                var ImageSelected = $(this).val();
+                formData.append("Sentences[" + i + "].IsItTrue", IsItTrue);
+
+            });
+
+            $.ajax({
+                method: 'post',
+                url: "Questions/AddAnsware",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+
+                }
+            });
+
+        });
+
+        $("#addItem").click(function () {
+            $.ajax({
+                url: this.href,
+                cache: false,
+                success: function (html) { $("#editorRows").append(html); }
+            });
+            return false;
+        });
+
+        $("a.deleteRow").on("click", function () {
+            $(this).parents("div.editorRow:first").remove();
+            return false;
+        });
+    </script>
+}

@@ -1,0 +1,93 @@
+﻿@model Sotis2.Models.DTO.QuestionWithAnswaresDTO
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form asp-action="AddAnsware" method="post">
+    <div id="editorRows">
+        @using (Html.BeginForm())
+        {
+
+            <div class="form-group">
+                <label asp-for="@Model.QuestionText" class="control-label"></label>
+                <input asp-for="@Model.QuestionText" class="form-control" />
+                <span asp-validation-for="@Model.QuestionText" class="text-danger"></span>
+            </div>
+
+            <div type="hidden" class="form-group">
+                <label asp-for="@Model.ID" class="control-label"></label>
+                <input asp-for="@Model.ID" class="form-control" />
+                <span asp-validation-for="@Model.ID" class="text-danger"></span>
+            </div>
+        }
+        <input type="hidden" name="" value="@Model.Answares" />
+        @foreach (var item in Model.Answares)
+        {
+            <partial name="_AnswareEditor" model="item" />
+        }
+    </div>
+        <a id="addItem" asp-action="BlankAnsware" asp-controller="Questions">Add Answare...</a>
+        <br />
+        <input type="submit" id="submit" value="Finished" />
+</form>
+
+@section scripts {
+    <script>
+        $("#submit").click(function (e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            $("input[name='AnswareText']").each(function (i) {
+                var AnswareText = $(this).val();
+                formData.append("Answares[" + i + "].AnswareText", AnswareText);
+
+            });
+            $("input[name='IsItTrue']").each(function (i) {
+                var IsItTrue = $(this).val();
+                formData.append("Answares[" + i + "].IsItTrue", IsItTrue);
+
+            });
+
+            $("input[name='ID']").each(function (i) {
+                var ID = $(this).val();
+                formData.append("ID", ID);
+
+            });
+
+            $("input[name='QuestionText']").each(function (i) {
+                var QuestionText = $(this).val();
+                formData.append("QuestionText", QuestionText);
+
+            });
+
+            $.ajax({
+                method: 'post',
+                url: "AddAnsware",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+
+                }
+            });
+
+        });
+
+        $("#addItem").click(function () {
+            $.ajax({
+                url: this.href,
+                cache: false,
+                success: function (html) { $("#editorRows").append(html); }
+            });
+            return false;
+        });
+
+        $("a.deleteRow").on("click", function () {
+            $(this).parents("div.editorRow:first").remove();
+            return false;
+        });
+    </script>
+}

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sotis2.Data;
 using Sotis2.Models;
+using Sotis2.Models.DTO;
 
 namespace Sotis2.Controllers
 {
@@ -46,8 +48,59 @@ namespace Sotis2.Controllers
         // GET: Questions/Create
         public IActionResult Create()
         {
-            return View();
+            QuestionWithAnswaresDTO qwaDTO = new QuestionWithAnswaresDTO
+            {
+                Answares = new List<Answare>
+        {
+            new Answare { AnswareText = "AAA"
+            , IsItTrue = true},
+
+            new Answare { AnswareText = "BBB"
+            , IsItTrue = false},
+
+            new Answare { AnswareText = "CCC"
+            , IsItTrue = true},
         }
+            };
+            return View("CreateQWA", qwaDTO);
+            //return View(qwaDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAnsware(QuestionWithAnswaresDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                Question Question = new Question(model.QuestionText);
+                Question.ID = model.ID;
+                if (Question.ID == 0)
+                {
+                    _context.Questions.Add(Question);
+                }
+                for (int i = 0; i < model.Answares.Count; i++)
+                {
+                    if (model.Answares[i].AnswareText != null)
+                    {
+                        model.Answares[i].QuestionID = Question.ID;
+                        _context.Answares.Add(model.Answares[i]);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index"); 
+                //View("Index", await _context.Questions.ToListAsync());
+
+            }
+            return View(model);
+        }
+
+        public IActionResult BlankAnsware()
+        {
+            return PartialView("_AnswareEditor", new Answare());
+        }
+
+        // END OF ADDING
+
 
         // POST: Questions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -65,20 +118,38 @@ namespace Sotis2.Controllers
             return View(question);
         }
 
+        // POST: Questions/FullCreate
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //public async Task<IActionResult> FullCreate([Bind("ID,QuestionText")] QuestionWithAnswaresDTO questionWithAnswaresDTO)
+        public async Task<IActionResult> FullCreate(FormCollection collection)
+        {
+            return View();
+            /*
+            if (ModelState.IsValid)
+            {
+                _context.Add(questionWithAnswaresDTO);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(new Question(questionWithAnswaresDTO.ID, questionWithAnswaresDTO.QuestionText, new Test()));*/
+        }
+
         // GET: Questions/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var question = await _context.Questions.FindAsync(id);
-            if (question == null)
-            {
-                return NotFound();
-            }
-            return View(question);
+            QuestionWithAnswaresDTO qwaDTO = new QuestionWithAnswaresDTO();
+            Question question = _context.Questions.Find(id);
+            qwaDTO.QuestionText = question.QuestionText;
+            qwaDTO.ID = question.ID;
+
+            qwaDTO.Answares =  _context.Answares.Where(x => x.QuestionID == qwaDTO.ID).ToList();
+
+            return View("CreateQWA", qwaDTO);
         }
 
         // POST: Questions/Edit/5

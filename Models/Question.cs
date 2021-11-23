@@ -8,6 +8,22 @@ namespace Sotis2.Models
 {
     public class Question
     {
+        public Question()
+        {
+        }
+
+        public Question(string questionText)
+        {
+            QuestionText = questionText;
+        }
+
+        public Question(long iD, string questionText, Test test)
+        {
+            ID = iD;
+            QuestionText = questionText;
+            Test = test;
+        }
+
         [Key]
         public long ID { get; set; }
         public string QuestionText { get; set; }
