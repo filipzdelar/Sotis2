@@ -17,11 +17,35 @@
                 <span asp-validation-for="@Model.QuestionText" class="text-danger"></span>
             </div>
 
-            <div type="hidden" class="form-group">
-                <label asp-for="@Model.ID" class="control-label"></label>
-                <input asp-for="@Model.ID" class="form-control" />
+            <div style="display:hidden;" class="form-group">
+                <!--<label type="hidden" asp-for="@Model.ID" class="control-label"></label>-->
+                <input hidden="hidden" type="hidden" asp-for="@Model.ID" class="form-control" />
                 <span asp-validation-for="@Model.ID" class="text-danger"></span>
             </div>
+
+            <br />
+            <label>Subject: </label>
+
+            <br />
+            <select class="form-control" asp-for="@Model.Subjects" name="Subjects">
+                @for (int i = 0; i < @Model.Subjects.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        <option asp-for="@Model.Subjects[i]" selected="selected">@Model.Subjects[i].Text</option>
+                        <span> @Model.Subjects[i].Text </span>
+                    }
+                    else
+                    {
+                        <option asp-for="@Model.Subjects[i]">@Model.Subjects[i].Text</option>
+                        <span> @Model.Subjects[i].Text </span>
+
+                    }
+
+                }
+            </select>
+
+            <br />
         }
         <input type="hidden" name="" value="@Model.Answares" />
         @foreach (var item in Model.Answares)
@@ -60,6 +84,12 @@
             $("input[name='QuestionText']").each(function (i) {
                 var QuestionText = $(this).val();
                 formData.append("QuestionText", QuestionText);
+
+            });
+
+            $("input[name='Subjects']").each(function (i) {
+                var Subjects = $(this).val();
+                formData.append("Subjects[" + i + "].Text", Subjects);
 
             });
 

@@ -51,19 +51,28 @@ namespace Sotis2.Controllers
             QuestionWithAnswaresDTO qwaDTO = new QuestionWithAnswaresDTO
             {
                 Answares = new List<Answare>
-        {
-            new Answare { AnswareText = "AAA"
-            , IsItTrue = true},
+                {
+                    new Answare { AnswareText = "Enter Answare here", IsItTrue = false },
+                }
 
-            new Answare { AnswareText = "BBB"
-            , IsItTrue = false},
+                
+        };
 
-            new Answare { AnswareText = "CCC"
-            , IsItTrue = true},
-        }
-            };
+            List<Subject> Subjects = _context.Subjects.ToList();
+            List<SelectListItem> listItems = new List<SelectListItem>();
+            foreach (Subject subject in Subjects)
+            {
+                listItems.Add(new SelectListItem
+                {
+                    Text = subject.NameOfSubject,
+                    Value = subject.ID.ToString()
+                });
+
+            }
+
+            qwaDTO.Subjects = listItems;
+
             return View("CreateQWA", qwaDTO);
-            //return View(qwaDTO);
         }
 
         [HttpPost]
@@ -72,20 +81,29 @@ namespace Sotis2.Controllers
             if (ModelState.IsValid)
             {
                 Question Question = new Question(model.QuestionText);
-                Question.ID = model.ID;
-                if (Question.ID == 0)
+                if (model.ID == 0)
                 {
+                    /*
+                    byte[] gb = Guid.NewGuid().ToByteArray();
+
+                    long l = BitConverter.ToInt64(gb, 0);
+                    Question.ID = l;*/
                     _context.Questions.Add(Question);
-                }
-                for (int i = 0; i < model.Answares.Count; i++)
-                {
-                    if (model.Answares[i].AnswareText != null)
+                
+                    await _context.SaveChangesAsync();
+                    for (int i = 0; i < model.Answares.Count; i++)
                     {
-                        model.Answares[i].QuestionID = Question.ID;
-                        _context.Answares.Add(model.Answares[i]);
+                        if (model.Answares[i].AnswareText != null && model.QuestionText != null && model.QuestionText != "" )
+                        {
+                            model.Answares[i].QuestionID = Question.ID;
+                            _context.Answares.Add(model.Answares[i]);
+                        }
                     }
                 }
-
+                else
+                {
+                    _context.Questions.Update(Question);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index"); 
                 //View("Index", await _context.Questions.ToListAsync());
@@ -148,6 +166,33 @@ namespace Sotis2.Controllers
             qwaDTO.ID = question.ID;
 
             qwaDTO.Answares =  _context.Answares.Where(x => x.QuestionID == qwaDTO.ID).ToList();
+
+            List<Subject> Subjects = _context.Subjects.ToList();
+            List<SelectListItem> listItems = new List<SelectListItem>();
+            foreach (Subject subject in Subjects)
+            {
+                if (subject.ID != qwaDTO.SubjectID) 
+                {
+                    listItems.Add(new SelectListItem
+                    {
+                        Text = subject.NameOfSubject,
+                        Value = subject.ID.ToString()
+                    }
+                    );
+                }
+                else
+                {
+                    listItems.Add(new SelectListItem
+                    {
+                        Text = subject.NameOfSubject,
+                        Value = subject.ID.ToString(),
+                        Selected = true
+                    });
+                }
+
+            }
+            qwaDTO.Subjects = listItems;
+
 
             return View("CreateQWA", qwaDTO);
         }

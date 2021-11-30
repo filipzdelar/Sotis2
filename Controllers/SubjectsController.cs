@@ -54,7 +54,7 @@ namespace Sotis2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID")] Subject subject)
+        public async Task<IActionResult> Create([Bind("ID,NameOfSubject")] Subject subject)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace Sotis2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("ID")] Subject subject)
+        public async Task<IActionResult> Edit(long id, [Bind("ID,NameOfSubject")] Subject subject)
         {
             if (id != subject.ID)
             {

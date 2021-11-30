@@ -10,5 +10,6 @@ namespace Sotis2.Models
     {
         [Key]
         public long ID { get; set; }
+        public string NameOfSubject { get; set; }
     }
 }
