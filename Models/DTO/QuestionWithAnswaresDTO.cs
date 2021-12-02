@@ -29,5 +29,7 @@ namespace Sotis2.Models.DTO
         public List<Answare> Answares { get; set; }
         //public List<Subject> Subjects { get; set; }
         public List<SelectListItem> Subjects = new List<SelectListItem>();
+
+
     }
 }

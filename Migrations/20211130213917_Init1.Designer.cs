@@ -10,8 +10,8 @@ using Sotis2.Data;
 namespace Sotis2.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20211123164357_Init6")]
-    partial class Init6
+    [Migration("20211130213917_Init1")]
+    partial class Init1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,9 @@ namespace Sotis2.Migrations
 
                     b.Property<bool>("IsItTrue")
                         .HasColumnType("bit");
+
+                    b.Property<long>("QuestionID")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ID");
 
@@ -76,6 +79,9 @@ namespace Sotis2.Migrations
                     b.Property<string>("QuestionText")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("SubjectID")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("TestID")
                         .HasColumnType("bigint");
 
@@ -92,6 +98,9 @@ namespace Sotis2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("NameOfSubject")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 

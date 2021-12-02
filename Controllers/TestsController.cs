@@ -72,6 +72,53 @@ namespace Sotis2.Controllers
             return View(test);
         }
 
+        // GET: Tests/Create
+        public IActionResult CreateTest()
+        {
+            TestQuestionAnswerDTO testDTO = new TestQuestionAnswerDTO();
+            testDTO.QuestionsDTO = new List<QuestionDTO>();
+
+            QuestionDTO question = CreateTmpQuestion();
+            testDTO.QuestionsDTO.Add(question);
+
+            question = CreateTmpQuestion();
+            testDTO.QuestionsDTO.Add(question);
+
+            question = CreateTmpQuestion();
+            testDTO.QuestionsDTO.Add(question);
+
+            return View(testDTO);
+        }
+
+        private static QuestionDTO CreateTmpQuestion()
+        {
+            QuestionDTO question = new QuestionDTO();
+            question.QuestionText = "Enter Question here... ";
+            question.AnswaresDTO = new List<Answare>();
+            Answare answare = new Answare();
+            answare.AnswareText = "Answare text";
+
+            question.AnswaresDTO.Add(answare);
+            return question;
+        }
+
+        // POST: Tests/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateTest([Bind("ID,TestDuration")] Test test)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(test);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(test);
+        }
+
+
         // GET: Tests/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {

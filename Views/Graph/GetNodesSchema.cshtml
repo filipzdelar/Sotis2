@@ -1,0 +1,56 @@
+﻿@page
+@model Sotis2.Models.Graph.DTO.GraphDTO
+@{
+//ViewData["Title"] = "Home page";
+//Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        color: #d3d3d3;
+        font: 12pt arial;
+        background-color: #ffffff;
+    }
+
+    #mynetwork {
+        width: 800px;
+        height: 800px;
+        background-color: #fff;
+    }
+</style>
+
+
+<div id="mynetwork"></div>
+<button onclick="https://localhost:5001/api/graph/display">Load the graph</button>
+
+<script type="text/javascript">
+
+    fetch('/api/graph/display') //./schema
+        .then((response) => {
+            // Now process the JSON:
+
+            response.json().then((data) => {
+
+                // Log the data :  api/graph/
+                console.log(data);
+
+                // Now display the graph using vis.js:
+                var options = {
+                    edges: {
+                        arrows: {
+                            to: { enabled: true },
+                            from: { enabled: false }
+                        }
+                    }
+                };
+
+                var container = document.getElementById('mynetwork');
+
+                new vis.Network(container, data, options);
+            });
+        })
+        .catch((err) => {
+            alert("Fetching Graph Schema Failed: " + err);
+        });
+
+</script>

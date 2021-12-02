@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sotis2.Data;
 using Sotis2.Models.Users;
+using Sotis2.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace Sotis2
                 .AddEntityFrameworkStores<DbContext>();
             */
             services.AddControllersWithViews();
+            services.AddSingleton<IGraphService>(new GraphService(Configuration.GetConnectionString("DefaultConnection")));
             /*
             services.AddAuthorization(options =>
             {

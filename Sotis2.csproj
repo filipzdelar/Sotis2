@@ -20,6 +20,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="System.Web.Optimization.Less" Version="1.3.5" />
+    <PackageReference Include="vis.js" Version="4.21.0" />
+    <PackageReference Include="VisNetwork.Blazor" Version="0.0.7" />
   </ItemGroup>
 
 </Project>
