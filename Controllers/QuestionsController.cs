@@ -126,7 +126,7 @@ namespace Sotis2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,QuestionText")] Question question)
+        public async Task<IActionResult> Create([Bind("ID,QuestionText, Answares")] QuestionWithAnswaresDTO question)
         {
             if (ModelState.IsValid)
             {
