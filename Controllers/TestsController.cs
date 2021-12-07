@@ -175,6 +175,14 @@ namespace Sotis2.Controllers
             return PartialView("_AnswareEditor", new Answare());
         }
 
+        
+        public ActionResult AddAnsware(int? k, int? i)
+        {
+            ViewBag.k = i;
+            ViewBag.i = i;
+            return PartialView();
+        }
+
         // GET: Tests/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {

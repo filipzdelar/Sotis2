@@ -25,49 +25,51 @@
                 <script>
 
                     function myFunction(id) {
-                        alert(id);
-                        console.log(id);
+                        
                         var div = document.createElement("div");
                         var arr = id.split("_");
-                        div.id = arr[0] + String(Number(arr[1]) + 1);
-
-                        document.getElementById("AnswareEditor_" + id).append(addBreak);
+                        div.id = arr[0] + String(Int(arr[1]) + 1);
+                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
 
 
                         var addBreak = document.createElement("br");
-                        div.append(addBreak);
-                        //document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
+                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
 
                         var span_answare = document.createElement("span");
                         span_answare.textContent = "Answare";
-                        div.append(span_answare);
 
-                        //document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
+                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
 
                         var span_true = document.createElement("span");
-                        span_true.textContent = "True";
+                        span_answare.textContent = "True";
 
-                        div.append(span_true);
-                        //document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
-
-                        document.getElementById("AnswareEditor_" + id).append(div);
-
+                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
+                        
                     }
+
+                    $("#Add").click(function (v) {
+                        $.ajax({
+                            url: '/Test/AddAnsware',
+                            data: { i: i },
+                            success: function (data) {
+                                $("#partial").append(data);
+                            }
+                        })
                 </script>
 
                 @for (int k = 0; k < @Model.QuestionsDTO[i].AnswaresDTO.Count; k++)
                 {
 
 
-                    <div id="AnswareEditor_@i.ToString() _@k.ToString()">
-                        <span>Answare: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].AnswareText)
+            <div id="AnswareEditor_@i.ToString() _@k.ToString()">
+                <span>Answare: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].AnswareText)
 
-                        <span>True: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].IsItTrue)
+                <span>True: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].IsItTrue)
 
-                        <a href="#" class="deleteRow">delete</a>
-                        <button onclick=""></button>
-                        <button onclick="myFunction('@i.ToString() _@k.ToString()')">Try it</button>
-                    </div>
+                <a href="#" class="deleteRow">delete</a>
+                <input type="button" value="@i.ToString() @k.ToString()" id="Add" />
+                <button onclick="myFunction('@i.ToString() _@k.ToString()')">Try it</button>
+            </div>
 
 
                 }
