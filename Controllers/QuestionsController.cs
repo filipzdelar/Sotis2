@@ -112,9 +112,10 @@ namespace Sotis2.Controllers
             return View(model);
         }
 
-        public IActionResult BlankAnsware()
+        public ActionResult AnswareEditor(int? i)
         {
-            return PartialView("_AnswareEditor", new Answare());
+            ViewBag.i = i;
+            return PartialView();
         }
 
         // END OF ADDING

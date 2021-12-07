@@ -1,94 +1,49 @@
-﻿@model Sotis2.Models.DTO.QuestionWithAnswaresDTO
+﻿
+    @model Sotis2.Models.DTO.QuestionWithAnswaresDTO
 
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h1>Create</h1>
-
-
-
-<h4>Question</h4>
-<hr />
-@using (Html.BeginForm())
-{
-    <div class="row">
-        <div class="col-md-4">
-            <!--
-            <label for="QuestionText">Enter your User ID:</label>
-            <input type="text" name="QuestionText" id="QuestionText" />-->
-
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.QuestionText, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.QuestionText, "", new { @class = "text-danger" })
-            </div>
-            <!--
-                @Html.TextBoxFor(x => Model.QuestionText, new { @class = "form-control" })
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="QuestionText" class="control-label"></label>
-                    <input asp-for="QuestionText" class="form-control" />
-                    <span asp-validation-for="QuestionText" class="text-danger"></span>
-                </div>
-            </form>-->
-
-
-        </div>
-    </div>
-    <div>
-        <ul asp-for="Answares" id="myList">
-        </ul>
-
-        <button onclick="myFunction()">Try it</button>
-
-        <script>
-            var staticVar = 0;
-
-            function myFunction() {
-
-                var addBreak = document.createElement("br");
-                document.getElementById("myList").appendChild(addBreak);
-
-                var addBreak2 = document.createElement("br");
-                document.getElementById("myList").appendChild(addBreak2);
-
-                var addAnswareCounter = document.createElement("label");
-                addAnswareCounter.textContent = "Answare " + ++staticVar + " : ";
-                document.getElementById("myList").appendChild(addAnswareCounter);
-
-                var node = document.createElement("input");
-                node.type = "text";
-                node.className = "form-control";
-
-                document.getElementById("myList").appendChild(node);
-
-                var addCheakBox = document.createElement("input");
-                addCheakBox.type = "checkbox";
-                document.getElementById("myList").appendChild(addCheakBox);
-
-                var addlabel = document.createElement("label");
-                addlabel.textContent = "True";
-                document.getElementById("myList").appendChild(addlabel);
-
-            }
-        </script>
-    </div>
-
-    <form asp-controller="Questions" asp-action="FullCreate">
-        <input type="submit" formmethod="post" />
-    </form>
-}
-    <!--
-    <div class="form-group">
-        <a value="Create" class="btn btn-primary" asp-action="FullCreate"> Submit</a>
-    </div>
-    -->
-
-    <div>
-        <a asp-action="Index">Back to List</a>
-    </div>
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        ViewData["Title"] = "Create";
+        Layout = "~/Views/Shared/_Layout.cshtml";
     }
+
+    <h1>Create</h1>
+
+
+
+    <h4>Question</h4>
+    <hr />
+    @using (Html.BeginForm("Create", "Case21", FormMethod.Post, new { id = "form1" }))
+    {
+        <p><b>StudentName:</b> @Html.TextBoxFor(model => model.QuestionText)</p>
+        <div id="partial">@{Html.RenderPartialAsync("AnswareEditor");}</div>
+
+        <input type="button" value="Add new row" id="Add" />
+        <input type="submit" />
+    }
+    @section scripts{
+        <script>
+            var i = 1;
+            $("#Add").click(function () {
+                $.ajax({
+                    url: '/Test/AnswareEditor',
+                    data: { i: i },
+                    success: function (data) {
+                        $("#partial").append(data);
+                    }
+                })
+                i++;
+            })
+        </script>
+    }
+<!--
+<div class="form-group">
+    <a value="Create" class="btn btn-primary" asp-action="FullCreate"> Submit</a>
+</div>
+-->
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
