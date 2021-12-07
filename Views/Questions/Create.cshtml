@@ -1,49 +1,50 @@
 ﻿
-    @model Sotis2.Models.DTO.QuestionWithAnswaresDTO
+@model Sotis2.Models.DTO.QuestionWithAnswaresDTO
 
-    @{
-        ViewData["Title"] = "Create";
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <h1>Create</h1>
+<h1>Create</h1>
 
 
 
-    <h4>Question</h4>
-    <hr />
-    @using (Html.BeginForm("Create", "Case21", FormMethod.Post, new { id = "form1" }))
-    {
-        <p><b>StudentName:</b> @Html.TextBoxFor(model => model.QuestionText)</p>
-        <div id="partial">@{Html.RenderPartialAsync("AnswareEditor");}</div>
+<h4>Question</h4>
+<hr />
+@using (Html.BeginForm("Create", "Questions", FormMethod.Post, new { id = "form1" }))
+{
+    <p><b>StudentName:</b> @Html.TextBoxFor(model => model.QuestionText)</p>
+    <div id="partial">@{Html.RenderPartialAsync("AnswareEditor", Answares[0]);}</div>
+    <!--<partial id="partial" name="AnswareEditor" ></partial>-->
+    <input type="button" value="Add new row" id="Add" />
+    <input type="submit" />
+}
 
-        <input type="button" value="Add new row" id="Add" />
-        <input type="submit" />
-    }
-    @section scripts{
-        <script>
-            var i = 1;
-            $("#Add").click(function () {
-                $.ajax({
-                    url: '/Test/AnswareEditor',
-                    data: { i: i },
-                    success: function (data) {
-                        $("#partial").append(data);
-                    }
-                })
-                i++;
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section scripts{
+    <script>
+        var i = 1;
+        $("#Add").click(function () {
+            $.ajax({
+                url: '/Questions/AnswareEditor',
+                data: { i: i },
+                success: function (data) {
+                    $("#partial").append(data);
+                }
             })
-        </script>
-    }
+            i++;
+        })
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
 <!--
 <div class="form-group">
     <a value="Create" class="btn btn-primary" asp-action="FullCreate"> Submit</a>
 </div>
 -->
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

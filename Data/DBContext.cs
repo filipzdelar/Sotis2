@@ -37,6 +37,5 @@ namespace Sotis2.Data
             //modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
         }
 
-        public DbSet<Sotis2.Models.DTO.QuestionWithAnswaresDTO> QuestionWithAnswaresDTO { get; set; }
     }
 }
