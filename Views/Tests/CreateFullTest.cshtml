@@ -44,23 +44,32 @@
                         span_answare.textContent = "True";
 
                         document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
-
+                        
                     }
+
+                    $("#Add").click(function (v) {
+                        $.ajax({
+                            url: '/Test/AddAnsware',
+                            data: { i: i },
+                            success: function (data) {
+                                $("#partial").append(data);
+                            }
+                        })
                 </script>
 
                 @for (int k = 0; k < @Model.QuestionsDTO[i].AnswaresDTO.Count; k++)
                 {
 
 
-                    <div id="AnswareEditor_@i.ToString() _@k.ToString()">
-                        <span>Answare: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].AnswareText)
+            <div id="AnswareEditor_@i.ToString() _@k.ToString()">
+                <span>Answare: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].AnswareText)
 
-                        <span>True: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].IsItTrue)
+                <span>True: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].IsItTrue)
 
-                        <a href="#" class="deleteRow">delete</a>
-
-                        <button onclick="myFunction('@i.ToString() _@k.ToString()')">Try it</button>
-                    </div>
+                <a href="#" class="deleteRow">delete</a>
+                <input type="button" value="@i.ToString() @k.ToString()" id="Add" />
+                <button onclick="myFunction('@i.ToString() _@k.ToString()')">Try it</button>
+            </div>
 
 
                 }
