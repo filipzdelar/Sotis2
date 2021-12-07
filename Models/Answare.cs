@@ -9,6 +9,24 @@ namespace Sotis2.Models
 {
     public class Answare
     {
+        public Answare()
+        {
+
+        }
+
+        public Answare(string answareText, bool isItTrue)
+        {
+            AnswareText = answareText;
+            IsItTrue = isItTrue;
+        }
+
+        public Answare(long iD, string answareText, bool isItTrue)
+        {
+            ID = iD;
+            AnswareText = answareText;
+            IsItTrue = isItTrue;
+        }
+
         [Key]
         public long ID { get; set; }
         public string AnswareText { get; set; }

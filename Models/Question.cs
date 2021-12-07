@@ -18,6 +18,12 @@ namespace Sotis2.Models
             QuestionText = questionText;
         }
 
+        public Question(long iD, string questionText)
+        {
+            ID = iD;
+            QuestionText = questionText;
+        }
+
         public Question(long iD, string questionText, Test test)
         {
             ID = iD;

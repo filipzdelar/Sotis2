@@ -14,11 +14,18 @@
 <hr />
 @using (Html.BeginForm("Create", "Questions", FormMethod.Post, new { id = "form1" }))
 {
+
     <p><b>StudentName:</b> @Html.TextBoxFor(model => model.QuestionText)</p>
-    <div id="partial">@{Html.RenderPartialAsync("AnswareEditor", Answares[0]);}</div>
-    <!--<partial id="partial" name="AnswareEditor" ></partial>-->
+    @for (int i = 0; i < Model.Answares.Count(); i++)
+    {
+        <div id="@i.ToString()">
+            <partial class="partial" name="AnswareEditor" for="@Model.Answares[i]"/>
+        </div>
+    }
+
     <input type="button" value="Add new row" id="Add" />
     <input type="submit" />
+    
 }
 
 
@@ -28,13 +35,34 @@
 
 @section scripts{
     <script>
-        var i = 1;
+        var i = 0;
         $("#Add").click(function () {
             $.ajax({
                 url: '/Questions/AnswareEditor',
                 data: { i: i },
                 success: function (data) {
-                    $("#partial").append(data);
+                    str = JSON.stringify(data);
+                    const newDiv = document.createElement("div");
+                    newDiv.id = i;
+                    newDiv.innerHTML += data;
+                    $("#form1").append(newDiv);//.append(data); //f+(i-1)
+                    did = document.getElementById("ID");
+                    did.setAttribute("Id", "Answares_" + i + "__ID");
+                    did.setAttribute("name", "Answares[" + i + "].ID");
+
+                    at = document.getElementById("AnswareText");
+                    at.setAttribute("Id", "Answares_" + i + "__AnswareText");
+                    at.setAttribute("name", "Answares[" + i + "].AnswareText");
+
+                    iit = document.getElementById("IsItTrue");
+                    iit.setAttribute("Id", "Answares_" + i + "__IsItTrue");
+                    iit.setAttribute("name", "Answares[" + i + "].IsItTrue");
+                    //old_did = document.getElementById("ID");
+                    //document.replaceChild(did, old_did);
+                    //i = i + 1;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
                 }
             })
             i++;
