@@ -1,0 +1,19 @@
+﻿@model Sotis2.Models.DTO.QuestionDTO
+<div>
+
+    <div class="form-group">
+        <label asp-for="@Model.QuestionText" class="control-label"></label>
+        <input asp-for="@Model.QuestionText" class="form-control" />
+        <span asp-validation-for="@Model.QuestionText" class="text-danger"></span>
+    </div>
+
+    @for (int k = 0; k < @Model.AnswaresDTO.Count; k++)
+    {
+        <div id = "AnswareEditor" + @k.ToString()>
+            <partial name="_AnswareFullEditor" model="Model.AnswaresDTO[k]" />
+
+        </div>
+        k++;
+    }
+
+</div>

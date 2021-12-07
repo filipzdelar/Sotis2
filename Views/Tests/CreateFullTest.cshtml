@@ -1,0 +1,74 @@
+﻿@model Sotis2.Models.DTO.TestQuestionAnswerDTO
+
+@{
+    ViewData["Title"] = "CreateFullTest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    int j = 0;
+}
+
+
+<ul asp-for="@Model.QuestionsDTO" name="QuestionsDTO" id="myList">
+    @for (int i = 0; i < @Model.QuestionsDTO.Count; i++)
+    {
+        <div class="editorRow">
+            <div id="questions_ @j.ToString()">
+                <br />
+                <div class="form-group">
+                    <label asp-for="@Model.QuestionsDTO[i].QuestionText" class="control-label"></label>
+                    <input asp-for="@Model.QuestionsDTO[i].QuestionText" class="form-control" />
+                    <span asp-validation-for="@Model.QuestionsDTO[i].QuestionText" class="text-danger"></span>
+                </div>
+
+                <script>
+
+                    function myFunction(id) {
+                        
+                        var div = document.createElement("div");
+                        var arr = id.split("_");
+                        div.id = arr[0] + String(Int(arr[1]) + 1);
+                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
+
+
+                        var addBreak = document.createElement("br");
+                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
+
+                        var span_answare = document.createElement("span");
+                        span_answare.textContent = "Answare";
+
+                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
+
+                        var span_true = document.createElement("span");
+                        span_answare.textContent = "True";
+
+                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
+
+                    }
+                </script>
+
+                @for (int k = 0; k < @Model.QuestionsDTO[i].AnswaresDTO.Count; k++)
+                {
+
+
+                    <div id="AnswareEditor_@i.ToString() _@k.ToString()">
+                        <span>Answare: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].AnswareText)
+
+                        <span>True: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].IsItTrue)
+
+                        <a href="#" class="deleteRow">delete</a>
+
+                        <button onclick="myFunction('@i.ToString() _@k.ToString()')">Try it</button>
+                    </div>
+
+
+                }
+                <!--<partial name="_QuestionFullEditor" model="Model.QuestionsDTO[i]" />-->
+                <br />
+            </div>
+        </div>
+        j++;
+    }
+
+</ul>

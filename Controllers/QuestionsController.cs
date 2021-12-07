@@ -72,7 +72,7 @@ namespace Sotis2.Controllers
 
             qwaDTO.Subjects = listItems;
 
-            return View("CreateQWA", qwaDTO);
+            return View("Create", qwaDTO); //QWA
         }
 
         [HttpPost]

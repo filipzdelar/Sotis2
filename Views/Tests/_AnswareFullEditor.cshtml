@@ -5,7 +5,10 @@
     <span>Answare: </span> @Html.EditorFor(m => m.AnswareText)
 
     <span>True: </span> @Html.EditorFor(m => m.IsItTrue)
-    <br />
+
     <a href="#" class="deleteRow">delete</a>
+    <br />
+    <a id="addItem_@Model" class="intro" asp-action="BlankAnsware" asp-controller="Tests">Add Answare...</a>
+
     <br />
 </div>

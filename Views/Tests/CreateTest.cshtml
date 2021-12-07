@@ -5,10 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@for (int i = 0; i < Model.QuestionsDTO.Count(); i++)
-{
 
+@{
+    int j = 0;
 }
+
 
 
 <form asp-action="AddAnsware" method="post">
@@ -26,23 +27,19 @@
             <label>Questions: </label>
 
             <br />
-            <select class="form-control" asp-for="@Model.QuestionsDTO" name="Subjects">
+            <!--class="form-control"-->
+            <select asp-for="@Model.QuestionsDTO" name="Subjects">
                 @for (int i = 0; i < @Model.QuestionsDTO.Count; i++)
                 {
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="@Model.QuestionsDTO[i].QuestionText" class="control-label"></label>
-                        <input asp-for="@Model.QuestionsDTO[i].QuestionText" class="form-control" />
-                        <span asp-validation-for="@Model.QuestionsDTO[i].QuestionText" class="text-danger"></span>
+                    <div class="editorRow">
+                        <div id="questions_" + @j.ToString()>
+                            <br />
+                            <partial name="_QuestionEditor" model="Model.QuestionsDTO[i]" />
+                            <partial name="_QuestionIteratorEditor" model="i" />
+                            <br />
+                        </div>
                     </div>
-
-                    @for (int j = 0; j < @Model.QuestionsDTO[i].AnswaresDTO.Count; j++)
-                    {
-                        <partial name="_AnswareEditor" model="Model.QuestionsDTO[i].AnswaresDTO[j]" />
-                    }
-                    <!--<a id="addItem_" + i asp-action="BlankAnsware" asp-controller="Questions">Add Answare...</a>-->
-                    <a id="addItem_" + @i class="intro"   asp-action="BlankAnsware" asp-controller="Questions">Add Answare...</a>
-                    <br />
+                    j++;
                 }
 
             </select>
@@ -50,13 +47,13 @@
             <a>Add Question</a>
         }
     </div>
-        
+
     <br />
     <input type="submit" id="submit" value="Finished" />
 </form>
 
 @section scripts {
-    <script>
+    <script type="text/javascript">
         $("#submit").click(function (e) {
             e.preventDefault();
             var formData = new FormData();
@@ -124,12 +121,14 @@
             // Finding total number of elements added
             var total_element = $(".element").length;
 
+            alert(total_element);
             // last <div> with element class id
             var lastid = $(".element:last").attr("id");
             var split_id = lastid.split("_");
             var nextindex = Number(split_id[1]) + 1;
             console.log(total_element);
             console.log(nextindex);
+            alert(nextindex);
 
             var max = 5;
             // Check total number elements
@@ -145,8 +144,21 @@
 
         $(".intro").click(function () {
             var a = $("this").attr("id");
-            console.log(event.target.id);
-            alert(event.target.id)
+            //console.log(event.target.id);
+            //alert(event.target.id);
+            var nextindex = Number(event.target.id.split("_")[1]) + 1;
+            //var lastid = $(".element:last").attr("id");
+            $("this").prev().after("<br /> < partial name = '_QuestionEditor' model = 'Model.QuestionsDTO[" + nextindex + "]' /> <partial name='_QuestionIteratorEditor' model='i' /> <br />");
+            $.ajax({
+                url: "/Tests/CreateTest",
+                type: "GET"
+            })
+                .done(function (partialViewResult) {
+                    $("#questions_1").html(partialViewResult);
+                });
+
+
         });
     </script>
+
 }

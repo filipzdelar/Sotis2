@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Sotis2.Models.Users;
+using Sotis2.Models.DTO;
 
 namespace Sotis2.Data
 {
@@ -35,5 +36,7 @@ namespace Sotis2.Data
             //modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
             //modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
         }
+
+        public DbSet<Sotis2.Models.DTO.QuestionWithAnswaresDTO> QuestionWithAnswaresDTO { get; set; }
     }
 }

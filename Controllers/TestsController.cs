@@ -73,7 +73,7 @@ namespace Sotis2.Controllers
         }
 
         // GET: Tests/Create
-        public IActionResult CreateTest()
+        public IActionResult CreateFullTest()
         {
             TestQuestionAnswerDTO testDTO = new TestQuestionAnswerDTO();
             testDTO.QuestionsDTO = new List<QuestionDTO>();
@@ -107,7 +107,7 @@ namespace Sotis2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateTest([Bind("ID,TestDuration")] Test test)
+        public async Task<IActionResult> CreateFullTest([Bind("ID,TestDuration")] Test test)
         {
             if (ModelState.IsValid)
             {
@@ -168,6 +168,11 @@ namespace Sotis2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(test);
+        }
+
+        public IActionResult BlankAnsware()
+        {
+            return PartialView("_AnswareEditor", new Answare());
         }
 
         // GET: Tests/Delete/5
