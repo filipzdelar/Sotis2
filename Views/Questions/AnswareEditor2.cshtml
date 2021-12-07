@@ -1,7 +1,7 @@
 ﻿@model Answare
 <div class="editorRow">
 
-    <span>Id: </span> @Html.HiddenFor(m => m.ID)
+    @Html.HiddenFor(m => m.ID)
     <span>Answare: </span> @Html.EditorFor(m => m.AnswareText)
 
     <span>True: </span> @Html.EditorFor(m => m.IsItTrue)

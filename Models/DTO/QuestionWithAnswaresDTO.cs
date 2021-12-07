@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,16 @@ namespace Sotis2.Models.DTO
             Answares = answares;
         }
 
+        public QuestionWithAnswaresDTO( List<Answare> answares, string questionText) : base(questionText)
+        {
+            Answares = answares;
+        }
+
+        public QuestionWithAnswaresDTO(int ID, string questionText, List<Answare> answares) : base(ID, questionText)
+        {
+            Answares = answares;
+        }
+
         /*
         public QuestionWithAnswaresDTO(List<Answare> answares, List<Subject> subjects)
         {
@@ -26,9 +37,10 @@ namespace Sotis2.Models.DTO
             Subjects = subjects;
         }*/
 
+        [BindProperty]
         public List<Answare> Answares { get; set; }
         //public List<Subject> Subjects { get; set; }
-        public List<SelectListItem> Subjects = new List<SelectListItem>();
+        //public List<SelectListItem> Subjects = new List<SelectListItem>();
 
 
     }

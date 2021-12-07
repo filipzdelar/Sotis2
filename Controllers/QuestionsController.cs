@@ -70,8 +70,8 @@ namespace Sotis2.Controllers
 
             }
 
-            qwaDTO.Subjects = listItems;
-
+            //qwaDTO.Subjects = listItems;
+            qwaDTO.QuestionText = "Text";
             return View("Create", qwaDTO); //QWA
         }
 
@@ -115,7 +115,7 @@ namespace Sotis2.Controllers
         public ActionResult AnswareEditor(int? i)
         {
             ViewBag.i = i;
-            return PartialView();
+            return  PartialView("AnswareEditor", new Answare(((int)i)+1, "Odgovori", true));
         }
 
         // END OF ADDING
@@ -126,8 +126,9 @@ namespace Sotis2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,QuestionText, Answares")] QuestionWithAnswaresDTO question)
+        public async Task<IActionResult> Create(QuestionWithAnswaresDTO question )
         {
+            //[Bind("ID,QuestionText,AnswareText")]  , [Bind("AnswareText")] string AnswareText
             if (ModelState.IsValid)
             {
                 _context.Add(question);
@@ -192,7 +193,7 @@ namespace Sotis2.Controllers
                 }
 
             }
-            qwaDTO.Subjects = listItems;
+            //qwaDTO.Subjects = listItems;
 
 
             return View("CreateQWA", qwaDTO);
