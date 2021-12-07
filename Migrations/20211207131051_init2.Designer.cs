@@ -10,8 +10,8 @@ using Sotis2.Data;
 namespace Sotis2.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20211130213917_Init1")]
-    partial class Init1
+    [Migration("20211207131051_init2")]
+    partial class init2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
