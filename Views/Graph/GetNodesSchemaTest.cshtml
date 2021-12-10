@@ -1,8 +1,8 @@
 ﻿@page
 @model Sotis2.Models.Graph.DTO.GraphDTO
 @{
-//ViewData["Title"] = "Home page";
-//Layout = "~/Views/Shared/_Layout.cshtml";
+    //ViewData["Title"] = "Home page";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -22,6 +22,7 @@
 
 <div id="mynetwork"></div>
 <button onclick="https://localhost:5001/api/graph/display">Load the graph</button>
+<button onclick="addMode()">Change Edges</button>
 
 <script type="text/javascript">
 
@@ -32,17 +33,21 @@
     var dataf;
     var options;
     var network;
-                    var nodes;
-                    var clickedNodeId = null;
+    var nodes;
+    var clickedNodeId = null;
 
 
+    function addMode() {
+        alert("Edge changer");
+        network.addEdgeMode();
+    }
 
 
-    fetch('/api/graph/display') //./schema
+    fetch('/api/graph/test') //./schema
         .then((response) => {
             // Now process the JSON:
             response.json().then((data) => {
-
+                alert("yes")
                 // Log the data :  api/graph/
                 console.log(data);
 
@@ -80,7 +85,7 @@
                                 callback(data);
                             }
                             // after each adding you will be back to addEdge mode
-                            network.addEdgeMode();
+                            
                         }
                     }
                 };
@@ -91,7 +96,7 @@
                 // var network = new vis.Network(container, data, dsoptions);
 
                 // here you init the addEdge mode
-                network.addEdgeMode();
+
 
 
                 alert(network);
@@ -103,7 +108,7 @@
                     dataf['edges'] += ({ from: clickedNodeId, id: 123, label: "", to: ids });
 
                     var options = {
-                        
+
                     };
 
                     var container = document.getElementById('mynetwork');
@@ -161,29 +166,29 @@
                         clickedNodeId = null;
 
                     }*/
-                    /*alert(nodes);
-                    var clickedNode;
-                    for (var i = 0; i < nodes.length; i++) {
-                        if (nodes[i]['id'] == ids)
-                        {
-                            alert("Found");
-                            clickedNode = nodes[i];
-                            break;
-                        }
+                /*alert(nodes);
+                var clickedNode;
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i]['id'] == ids)
+                    {
+                        alert("Found");
+                        clickedNode = nodes[i];
+                        break;
                     }
+                }
+                network.editNode();
+                */
+                //network.body.data.edges.add([{ from: from_id, to: to_id }])
+                /*
+                if ((params.nodes.length == 0) && (params.edges.length == 0)) {
+                    var updatedIds = nodes.add([{
+                        label: 'new',
+                        x: params.pointer.canvas.x,
+                        y: params.pointer.canvas.y
+                    }]);
+                    network.selectNodes([updatedIds[0]]);
                     network.editNode();
-                    */
-                    //network.body.data.edges.add([{ from: from_id, to: to_id }])
-                    /*
-                    if ((params.nodes.length == 0) && (params.edges.length == 0)) {
-                        var updatedIds = nodes.add([{
-                            label: 'new',
-                            x: params.pointer.canvas.x,
-                            y: params.pointer.canvas.y
-                        }]);
-                        network.selectNodes([updatedIds[0]]);
-                        network.editNode();
-                    }*/
+                }*/
                 //})
             });
         })

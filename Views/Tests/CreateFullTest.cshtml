@@ -4,80 +4,79 @@
     ViewData["Title"] = "CreateFullTest";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<h1>Create</h1>
 
-@{
-    int j = 0;
+
+
+<h4>Question</h4>
+<hr />
+@using (Html.BeginForm("CreateFullTest", "Tests", FormMethod.Post, new { id = "form_tests" }))
+{
+
+    <p><b>StudentName:</b> @Html.TextBoxFor(model => model.TestDuration)</p>
+
+    @for (int i = 0; i < Model.qWA.Count(); i++)
+    {
+        <div id="@i.ToString()">
+            <partial class="partial" name="QuestionEditor" for="@Model.qWA[i]" />
+        </div>
+    }
+    <br />
+    <input type="button" value="Add new question" id="AddQ" />
+    <input type="submit" />
+
 }
 
 
-<ul asp-for="@Model.QuestionsDTO" name="QuestionsDTO" id="myList">
-    @for (int i = 0; i < @Model.QuestionsDTO.Count; i++)
-    {
-        <div class="editorRow">
-            <div id="questions_ @j.ToString()">
-                <br />
-                <div class="form-group">
-                    <label asp-for="@Model.QuestionsDTO[i].QuestionText" class="control-label"></label>
-                    <input asp-for="@Model.QuestionsDTO[i].QuestionText" class="form-control" />
-                    <span asp-validation-for="@Model.QuestionsDTO[i].QuestionText" class="text-danger"></span>
-                </div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 
-                <script>
+@section scripts{
+    <script>
+        var i = 0;
+        $("#AddQ").click(function () {
+            $.ajax({
+                url: '/Tests/QuestionEditor',
+                data: { i: i },
+                success: function (data) {
+                    str = JSON.stringify(data);
+                    const newDiv = document.createElement("div");
+                    newDiv.id = i;
+                    newDiv.innerHTML += data;
+                    $("#form_tests").append(newDiv);//.append(data); //f+(i-1)
 
-                    function myFunction(id) {
-                        
-                        var div = document.createElement("div");
-                        var arr = id.split("_");
-                        div.id = arr[0] + String(Int(arr[1]) + 1);
-                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
+                    /*
+                    did = document.getElementById("ID");
+                    did.setAttribute("Id", "Answares_" + i + "__ID");
+                    did.setAttribute("name", "Answares[" + i + "].ID");
 
+                    at = document.getElementById("AnswareText");
+                    at.setAttribute("Id", "Answares_" + i + "__AnswareText");
+                    at.setAttribute("name", "Answares[" + i + "].AnswareText");
 
-                        var addBreak = document.createElement("br");
-                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
-
-                        var span_answare = document.createElement("span");
-                        span_answare.textContent = "Answare";
-
-                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
-
-                        var span_true = document.createElement("span");
-                        span_answare.textContent = "True";
-
-                        document.getElementById("AnswareEditor_" + id).appendChild(addBreak);
-                        
-                    }
-
-                    $("#Add").click(function (v) {
-                        $.ajax({
-                            url: '/Test/AddAnsware',
-                            data: { i: i },
-                            success: function (data) {
-                                $("#partial").append(data);
-                            }
-                        })
-                </script>
-
-                @for (int k = 0; k < @Model.QuestionsDTO[i].AnswaresDTO.Count; k++)
-                {
+                    iit = document.getElementById("IsItTrue");
+                    iit.setAttribute("Id", "Answares_" + i + "__IsItTrue");
+                    iit.setAttribute("name", "Answares[" + i + "].IsItTrue");
+                    */
 
 
-            <div id="AnswareEditor_@i.ToString() _@k.ToString()">
-                <span>Answare: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].AnswareText)
-
-                <span>True: </span> @Html.EditorFor(m => m.QuestionsDTO[i].AnswaresDTO[k].IsItTrue)
-
-                <a href="#" class="deleteRow">delete</a>
-                <input type="button" value="@i.ToString() @k.ToString()" id="Add" />
-                <button onclick="myFunction('@i.ToString() _@k.ToString()')">Try it</button>
-            </div>
-
-
+                    //old_did = document.getElementById("ID");
+                    //document.replaceChild(did, old_did);
+                    //i = i + 1;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
                 }
-                <!--<partial name="_QuestionFullEditor" model="Model.QuestionsDTO[i]" />-->
-                <br />
-            </div>
-        </div>
-        j++;
-    }
+            })
+            i++;
+        })
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-</ul>
+}
+<!--
+<div class="form-group">
+    <a value="Create" class="btn btn-primary" asp-action="FullCreate"> Submit</a>
+</div>
+-->

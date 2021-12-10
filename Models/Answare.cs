@@ -27,6 +27,13 @@ namespace Sotis2.Models
             IsItTrue = isItTrue;
         }
 
+        public Answare(string answareText, bool isItTrue, long questionID)
+        {
+            AnswareText = answareText;
+            IsItTrue = isItTrue;
+            QuestionID = questionID;
+        }
+
         [Key]
         public long ID { get; set; }
         public string AnswareText { get; set; }

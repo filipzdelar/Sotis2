@@ -1,52 +1,45 @@
 ﻿
 @model Sotis2.Models.DTO.QuestionWithAnswaresDTO
+<!--
 
-@{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
 
-<h1>Create</h1>
+-->
 
-
-
-<h4>Question</h4>
 <hr />
-@using (Html.BeginForm("Create", "Questions", FormMethod.Post, new { id = "form1" }))
-{
+<!--using (Html.BeginForm("CreateFullTest", "Tests", FormMethod.Post, new { id = "form1" })){-->
+<div id="f @Model.ID">
+    <p><b>Question: </b> @Html.TextBoxFor(model => model.QuestionText)</p>
 
-    <p><b>StudentName:</b> @Html.TextBoxFor(model => model.QuestionText)</p>
     @for (int i = 0; i < Model.Answares.Count(); i++)
     {
         <div id="@i.ToString()">
-            <partial class="partial" name="AnswareEditor" for="@Model.Answares[i]"/>
+            <partial class="partial" name="AnswareEditor" for="@Model.Answares[i]" />
         </div>
     }
 
-    <input type="button" value="Add new row" id="Add" />
-    <input type="submit" />
-    
-}
-
-
-<div>
-    <a asp-action="Index">Back to List</a>
+    <input type="button" value="Add new Answare" id="Add @Model.ID" />
 </div>
+<br />
+<!--}-->
+
 
 @section scripts{
     <script>
         var i = 0;
-        $("#Add").click(function () {
+        $("#Add"+String(@Model.ID)).click(function () {
             $.ajax({
-                url: '/Questions/AnswareEditor',
+                url: '/Tests/AnswareEditor',
                 data: { i: i },
                 success: function (data) {
                     str = JSON.stringify(data);
                     const newDiv = document.createElement("div");
                     newDiv.id = i;
                     newDiv.innerHTML += data;
-                    $("#form1").append(newDiv);//.append(data); //f+(i-1)
-                    did = document.getElementById("ID");
+
+                    $("#f " + @Model.ID).append(newDiv);//.append(data); //f+(i-1)
+                    /*did = document.getElementById("ID");
                     did.setAttribute("Id", "Answares_" + i + "__ID");
                     did.setAttribute("name", "Answares[" + i + "].ID");
 
@@ -57,6 +50,8 @@
                     iit = document.getElementById("IsItTrue");
                     iit.setAttribute("Id", "Answares_" + i + "__IsItTrue");
                     iit.setAttribute("name", "Answares[" + i + "].IsItTrue");
+                    */
+
                     //old_did = document.getElementById("ID");
                     //document.replaceChild(did, old_did);
                     //i = i + 1;

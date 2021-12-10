@@ -22,6 +22,7 @@ namespace Sotis2.Data
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answare> Answares { get; set; }
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Domain> Domains { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +31,7 @@ namespace Sotis2.Data
             modelBuilder.Entity<Question>().ToTable("Question");
             modelBuilder.Entity<Answare>().ToTable("Answare");
             modelBuilder.Entity<Subject>().ToTable("Subject");
+            modelBuilder.Entity<Domain>().ToTable("Domain");
 
 
             //modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");

@@ -18,6 +18,13 @@ namespace Sotis2.Models
             QuestionText = questionText;
         }
 
+        public Question(Test t, string questionText)
+        {
+            Test = t;
+            QuestionText = questionText;
+        }
+
+
         public Question(long iD, string questionText)
         {
             ID = iD;
@@ -35,6 +42,9 @@ namespace Sotis2.Models
         public long ID { get; set; }
         public string QuestionText { get; set; }
         public Test Test { get; set; }
+
+        [ForeignKey("Domain")]
+        public long DomainID { get; set; }
 
         [ForeignKey("Subject")]
         public long SubjectID { get; set; }

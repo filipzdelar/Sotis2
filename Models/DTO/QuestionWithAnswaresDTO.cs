@@ -20,7 +20,7 @@ namespace Sotis2.Models.DTO
             Answares = answares;
         }
 
-        public QuestionWithAnswaresDTO( List<Answare> answares, string questionText) : base(questionText)
+        public QuestionWithAnswaresDTO(List<Answare> answares, string questionText) : base(questionText)
         {
             Answares = answares;
         }

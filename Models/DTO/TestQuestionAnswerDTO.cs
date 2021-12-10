@@ -12,7 +12,9 @@ namespace Sotis2.Models.DTO
 
         }
 
-        public List<QuestionDTO> QuestionsDTO { get; set; }
+        public long? Id { get; set; }
+        public List<QuestionWithAnswaresDTO> qWA { get; set; }
+        //public List<QuestionDTO> QuestionsDTO { get; set; }
         public TimeSpan TestDuration { get; set; }
     }
 }
