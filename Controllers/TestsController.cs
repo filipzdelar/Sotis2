@@ -34,14 +34,30 @@ namespace Sotis2.Controllers
                 return NotFound();
             }
 
+
+
             var test = await _context.Tests
                 .FirstOrDefaultAsync(m => m.ID == id);
+
+
+
+            List<Question> questions = _context.Questions.Where(x => x.Test.ID == test.ID).ToList();
+            TestQuestionAnswerDTO dTO = new TestQuestionAnswerDTO();
+            dTO.Id = test.ID;
+            dTO.TestDuration = test.TestDuration;
+            dTO.qWA = new List<QuestionWithAnswaresDTO>();
+            for (int i = 0; i < questions.Count(); i++)
+            {
+                List<Answare> answares = _context.Answares.Where(x => x.QuestionID == questions[i].ID).ToList();
+                dTO.qWA.Add(new QuestionWithAnswaresDTO(answares, questions[i].QuestionText));
+            }
+
             if (test == null)
             {
                 return NotFound();
             }
 
-            return View(test);
+            return View(dTO);
         }
 
         // GET: Tests/Create
@@ -73,6 +89,7 @@ namespace Sotis2.Controllers
         }
 
         // GET: Tests/Create
+        /*
         public IActionResult CreateFullTest()
         {
             TestQuestionAnswerDTO testDTO = new TestQuestionAnswerDTO();
@@ -89,23 +106,40 @@ namespace Sotis2.Controllers
 
             return View(testDTO);
         }
-
-        private static QuestionDTO CreateTmpQuestion()
+        */
+        private static QuestionWithAnswaresDTO CreateTmpQuestion()
         {
-            QuestionDTO question = new QuestionDTO();
+            QuestionWithAnswaresDTO question = new QuestionWithAnswaresDTO();
             question.QuestionText = "Enter Question here... ";
-            question.AnswaresDTO = new List<Answare>();
-            Answare answare = new Answare();
-            answare.AnswareText = "Answare text";
+            question.Answares = new List<Answare>();
 
-            question.AnswaresDTO.Add(answare);
+            Answare answare = new Answare();
+            answare.AnswareText = "Answare text 1";
+            question.Answares.Add(answare);
+
+            answare = new Answare();
+            answare.AnswareText = "Answare text 2";
+            question.Answares.Add(answare);
+
+            answare = new Answare();
+            answare.AnswareText = "Answare text 3";
+            question.Answares.Add(answare);
+
+            answare = new Answare();
+            answare.AnswareText = "Answare text 4";
+            question.Answares.Add(answare);
+
+            answare = new Answare();
+            answare.AnswareText = "Answare text 5";
+            question.Answares.Add(answare);
             return question;
         }
 
         // POST: Tests/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        
+        /*[HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateFullTest([Bind("ID,TestDuration")] Test test)
         {
@@ -116,7 +150,7 @@ namespace Sotis2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(test);
-        }
+        }*/
 
 
         // GET: Tests/Edit/5
@@ -146,6 +180,8 @@ namespace Sotis2.Controllers
             {
                 return NotFound();
             }
+
+
 
             if (ModelState.IsValid)
             {
@@ -222,6 +258,79 @@ namespace Sotis2.Controllers
         {
 
             return View(testDTO);
+        }
+
+        /// <summary>
+        /// //////////////////////////////////////////////////////////////////////////////////////////
+        /// </summary>
+
+
+        // GET: Questions/Create
+        public IActionResult CreateFullTest()
+        {
+
+            TestQuestionAnswerDTO testDTO = new TestQuestionAnswerDTO();
+            testDTO.qWA = new List<QuestionWithAnswaresDTO>();
+
+            QuestionWithAnswaresDTO question = CreateTmpQuestion();
+            question.ID = 1;
+            testDTO.qWA.Add(question);
+
+            question = CreateTmpQuestion();
+            question.ID = 2;
+            testDTO.qWA.Add(question);
+
+            question = CreateTmpQuestion();
+            question.ID = 3;
+            testDTO.qWA.Add(question);
+
+            return View(testDTO);
+        }
+
+        /// <param name="question"></param>
+        /// <returns></returns>
+        // POST: Questions/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateFullTest(TestQuestionAnswerDTO question)
+        {
+            //[Bind("ID,QuestionText,AnswareText")]  , [Bind("AnswareText")] string AnswareText
+            if (ModelState.IsValid)
+            {
+                Test t = new Test(question.TestDuration);
+                
+                _context.Tests.Add(t);
+
+                await _context.SaveChangesAsync();
+                for (int i = 0; i < question.qWA.Count(); i++)
+                {
+                    Question q = new Question(t, question.qWA[i].QuestionText);
+                    _context.Questions.Add(q);
+                    await _context.SaveChangesAsync();
+
+                    for (int j = 0; j < question.qWA[i].Answares.Count(); j++)
+                    {
+                        _context.Answares.Add(new Answare(question.qWA[i].Answares[j].AnswareText, question.qWA[i].Answares[j].IsItTrue, q.ID));
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(question);
+        }
+
+        public ActionResult QuestionEditor(int? i)
+        {
+            ViewBag.i = i;
+            QuestionWithAnswaresDTO questionWithAnswaresDTO = new QuestionWithAnswaresDTO();
+            questionWithAnswaresDTO.QuestionText = "Enter question here ";
+            questionWithAnswaresDTO.ID = ((int)i) + 1;
+            questionWithAnswaresDTO.Answares = new List<Answare>();
+            questionWithAnswaresDTO.Answares.Append(new Answare("Odgovori", true));
+            return PartialView("QuestionEditor", questionWithAnswaresDTO);
         }
     }
 }
