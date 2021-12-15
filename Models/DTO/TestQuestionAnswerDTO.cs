@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Sotis2.Models.DTO
 {
@@ -16,5 +18,10 @@ namespace Sotis2.Models.DTO
         public List<QuestionWithAnswaresDTO> qWA { get; set; }
         //public List<QuestionDTO> QuestionsDTO { get; set; }
         public TimeSpan TestDuration { get; set; }
+
+        public List<SelectListItem> Courses { get; set; }
+        public string CourseID { get; set; }
+        public string Name { get; set; }
+
     }
 }

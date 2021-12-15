@@ -1,0 +1,101 @@
+﻿@model Sotis2.Models.DTO.AttemptDTO
+
+@{
+    ViewData["Title"] = "StartAttempt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    @using (Html.BeginForm("Next", "Attempts", FormMethod.Post, new { id = "Form1" }))
+    {
+        <h4>Attempt</h4>
+
+        <br />
+            <progress id="progressBar" value=@Model.TmpSerialQuestion max=@Model.TotalNumberOfQuestions style="width: 300px;"></progress>
+
+        <br />
+
+        <!--<input type="hidden" asp-for="Model.TmpSerialQuestion" />-->
+        <hr />
+        <dl class="row">
+            @if (true) //Model.TmpQuestionDTOs != null && Model.TmpQuestionDTOs.Count() > 0
+            {
+
+
+                <dt class="col-sm-2">
+                    @Html.HiddenFor(model => Model.TotalNumberOfQuestions, new { @class = "form-control" })
+                </dt>
+
+                @for (int j = 0; j < Model.TmpQuestionDTOs.Count(); j++)
+                {
+                    if (j == Model.TmpSerialQuestion)
+                    {
+                        <dt class="col-sm-2">
+                            @Html.DisplayFor(model => Model.TmpQuestionDTOs[j].QuestionText, new { @class = "form-control" })
+                        </dt>
+                        @for (int i = 0; i < Model.TmpQuestionDTOs[j].TmpAnswaresDTO.Count(); i++)
+                        {
+
+                            <dt class="col-sm-2">
+                                @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].AnswareText, new { @class = "form-control" })
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].AnswareText) @Html.EditorFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].WasChecked)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].AttemptID, new { @class = "form-control" })
+                            </dt>
+                            <dt class="col-sm-2">
+                                @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].AnswareID, new { @class = "form-control" })
+                            </dt>
+                        }
+
+                    }
+                    else
+                    {
+                        <dt class="col-sm-2">
+                            @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].QuestionText, new { @class = "form-control" })
+                        </dt>
+
+                        @for (int i = 0; i < Model.TmpQuestionDTOs[j].TmpAnswaresDTO.Count(); i++)
+                        {
+
+                            <dt class="col-sm-2">
+                                @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].AnswareText, new { @class = "form-control" })
+                            </dt>
+                            <dt class="col-sm-2">
+                                @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].WasChecked, new { @class = "form-control" })
+                            </dt>
+
+                            <dt class="col-sm-2">
+                                @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].AttemptID, new { @class = "form-control" })
+                            </dt>
+                            <dt class="col-sm-2">
+                                @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].AnswareID, new { @class = "form-control" })
+                            </dt>
+                        }
+
+                    }
+
+
+                }
+            }
+            else
+            {
+                <h>Test nije definisan</h>
+            }
+
+        </dl>
+
+
+        <!--<a asp-action="Next">Next</a>-->
+        <input type="submit" value="Submit" name="Next" class="btn btn-primary">
+    }
+
+    <!--<a asp-action="Back">Back</a>-->
+
+
+
+</div>

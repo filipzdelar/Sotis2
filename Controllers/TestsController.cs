@@ -266,7 +266,7 @@ namespace Sotis2.Controllers
 
 
         // GET: Questions/Create
-        public IActionResult CreateFullTest()
+        public async Task<IActionResult> CreateFullTestAsync()
         {
 
             TestQuestionAnswerDTO testDTO = new TestQuestionAnswerDTO();
@@ -284,6 +284,13 @@ namespace Sotis2.Controllers
             question.ID = 3;
             testDTO.qWA.Add(question);
 
+            testDTO.Courses = new List<SelectListItem>();
+            List<Course> courses = await _context.Courses.ToListAsync();
+            foreach (Course course in courses)
+            {
+                testDTO.Courses.Add(new SelectListItem(course.Name, course.ID.ToString()));
+            }
+
             return View(testDTO);
         }
 
@@ -299,7 +306,8 @@ namespace Sotis2.Controllers
             //[Bind("ID,QuestionText,AnswareText")]  , [Bind("AnswareText")] string AnswareText
             if (ModelState.IsValid)
             {
-                Test t = new Test(question.TestDuration);
+                Course course = await _context.Courses.FindAsync(Convert.ToInt64(question.CourseID));
+                Test t = new Test(question.TestDuration, course, question.Name);
                 
                 _context.Tests.Add(t);
 

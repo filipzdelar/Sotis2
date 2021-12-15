@@ -42,12 +42,6 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Tests" asp-action="Index">Tests</a>
                     </li>
                     <li class="nav-item">
@@ -60,12 +54,16 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Subjects" asp-action="Index">Subjects</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-dark" href="/api/graph/schema">Domains</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" href="/api/graph/schematest">Domain for tests</a>
                     </li>
                 </ul>
+                <partial name="_LoginPartial" />
             </div>
         </div>
     </div>

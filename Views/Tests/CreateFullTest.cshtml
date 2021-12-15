@@ -13,17 +13,20 @@
 @using (Html.BeginForm("CreateFullTest", "Tests", FormMethod.Post, new { id = "form_tests" }))
 {
 
-    <p><b>StudentName:</b> @Html.TextBoxFor(model => model.TestDuration)</p>
 
-    @for (int i = 0; i < Model.qWA.Count(); i++)
-    {
-        <div id="@i.ToString()">
-            <partial class="partial" name="QuestionEditor" for="@Model.qWA[i]" />
-        </div>
-    }
-    <br />
-    <input type="button" value="Add new question" id="AddQ" />
-    <input type="submit" />
+<p><b>Name:</b> @Html.TextBoxFor(model => model.Name)</p>
+<p><b>Test duration:</b> @Html.TextBoxFor(model => model.TestDuration)</p>
+<p><b>Course:</b> @Html.DropDownListFor(model => model.CourseID, Model.Courses , "-- Select Status --")</p>
+
+@for (int i = 0; i < Model.qWA.Count(); i++)
+{
+<div id="@i.ToString()">
+    <partial class="partial" name="QuestionEditor" for="@Model.qWA[i]" />
+</div>
+}
+<br />
+<input type="button" value="Add new question" id="AddQ" />
+<input type="submit" />
 
 }
 
