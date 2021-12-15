@@ -1,0 +1,17 @@
+﻿@model Sotis2.Models.Attempt
+
+@{
+    ViewData["Title"] = "Complited";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Complited</h1>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

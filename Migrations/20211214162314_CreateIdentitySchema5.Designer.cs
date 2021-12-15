@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sotis2.Data;
 
 namespace Sotis2.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20211214162314_CreateIdentitySchema5")]
+    partial class CreateIdentitySchema5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,21 +204,6 @@ namespace Sotis2.Migrations
                     b.ToTable("Attempt");
                 });
 
-            modelBuilder.Entity("Sotis2.Models.Course", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Course");
-                });
-
             modelBuilder.Entity("Sotis2.Models.Domain", b =>
                 {
                     b.Property<long>("ID")
@@ -280,15 +267,6 @@ namespace Sotis2.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("CourseID")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartOfTest")
-                        .HasColumnType("datetime2");
-
                     b.Property<long?>("SubjectID")
                         .HasColumnType("bigint");
 
@@ -297,32 +275,9 @@ namespace Sotis2.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CourseID");
-
                     b.HasIndex("SubjectID");
 
                     b.ToTable("Test");
-                });
-
-            modelBuilder.Entity("Sotis2.Models.TmpAnsware", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AnswareText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("AttemptID")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("WasChecked")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("TmpAnsware");
                 });
 
             modelBuilder.Entity("Sotis2.Models.Users.AppUser", b =>
@@ -472,15 +427,9 @@ namespace Sotis2.Migrations
 
             modelBuilder.Entity("Sotis2.Models.Test", b =>
                 {
-                    b.HasOne("Sotis2.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseID");
-
                     b.HasOne("Sotis2.Models.Subject", "Subject")
                         .WithMany()
                         .HasForeignKey("SubjectID");
-
-                    b.Navigation("Course");
 
                     b.Navigation("Subject");
                 });

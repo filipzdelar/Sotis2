@@ -11,7 +11,7 @@ using Sotis2.Models.DTO;
 
 namespace Sotis2.Data
 {
-    public class DBContext : DbContext// IdentityDbContext<AppUser>
+    public class DBContext : IdentityDbContext<AppUser>
     {
         public DBContext(DbContextOptions<DBContext> options) : base(options)
         {
@@ -23,15 +23,23 @@ namespace Sotis2.Data
         public DbSet<Answare> Answares { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Domain> Domains { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<TmpAnsware> TmpAnswares { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Test>().ToTable("Test");
             modelBuilder.Entity<Attempt>().ToTable("Attempt");
             modelBuilder.Entity<Question>().ToTable("Question");
             modelBuilder.Entity<Answare>().ToTable("Answare");
+            modelBuilder.Entity<TmpAnsware>().ToTable("TmpAnsware");
             modelBuilder.Entity<Subject>().ToTable("Subject");
-            modelBuilder.Entity<Domain>().ToTable("Domain");
+            modelBuilder.Entity<Domain>().ToTable("Domain"); 
+            modelBuilder.Entity<AppUser>().ToTable("AppUser");
+            modelBuilder.Entity<Course>().ToTable("Course");
 
 
             //modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");

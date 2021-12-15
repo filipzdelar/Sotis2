@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sotis2.Data;
 
 namespace Sotis2.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20211214172114_Init7")]
+    partial class Init7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,12 +285,6 @@ namespace Sotis2.Migrations
                     b.Property<long?>("CourseID")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartOfTest")
-                        .HasColumnType("datetime2");
-
                     b.Property<long?>("SubjectID")
                         .HasColumnType("bigint");
 
@@ -302,27 +298,6 @@ namespace Sotis2.Migrations
                     b.HasIndex("SubjectID");
 
                     b.ToTable("Test");
-                });
-
-            modelBuilder.Entity("Sotis2.Models.TmpAnsware", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AnswareText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("AttemptID")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("WasChecked")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("TmpAnsware");
                 });
 
             modelBuilder.Entity("Sotis2.Models.Users.AppUser", b =>
