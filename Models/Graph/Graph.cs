@@ -13,5 +13,8 @@ namespace Sotis2.Models.Graph
 
         [JsonProperty("edges")]
         public IList<Edge> Edges { get; set; }
+
+        [JsonProperty("isDomain")]
+        public bool isDomain  { get; set; }
     }
 }

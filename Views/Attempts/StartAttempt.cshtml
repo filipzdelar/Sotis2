@@ -50,6 +50,10 @@
                             <dt class="col-sm-2">
                                 @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].AnswareID, new { @class = "form-control" })
                             </dt>
+
+                            <div>
+                                @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].ID, new { @class = "form-control" })
+                            </div>
                         }
 
                     }
@@ -75,6 +79,9 @@
                             <dt class="col-sm-2">
                                 @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].AnswareID, new { @class = "form-control" })
                             </dt>
+                            <div>
+                                @Html.HiddenFor(model => Model.TmpQuestionDTOs[j].TmpAnswaresDTO[i].ID, new { @class = "form-control" })
+                            </div>
                         }
 
                     }

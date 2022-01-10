@@ -8,8 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Sotis2.Data;
 using Sotis2.Models;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 namespace Sotis2.Controllers
 {
+    [Authorize]
     public class CoursesController : Controller
     {
         private readonly DBContext _context;
@@ -90,7 +95,7 @@ namespace Sotis2.Controllers
             }
 
             var course = await _context.Courses.FindAsync(id);
-            var tests = await _context.Tests.Where(x => x.ID == course.ID).ToListAsync();
+            var tests = await _context.Tests.Where(x => x.Course.ID == course.ID).ToListAsync();
             if (course == null)
             {
                 return NotFound();

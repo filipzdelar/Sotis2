@@ -28,6 +28,8 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-controller="Graph" asp-action="ChangeDomain" asp-route-id="@item.ID">Order Of Questions</a> |
+                <a asp-action="Iita" asp-route-id="@item.ID">Generate graph with iita</a> |
                 <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
             </td>
         </tr>
