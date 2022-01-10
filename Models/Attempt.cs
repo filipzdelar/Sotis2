@@ -40,6 +40,9 @@ namespace Sotis2.Models
         public float Accuracy { get; set; }
         public int Grade { get; set; }
 
+        public string Name { get; set; }
+        public string Surname { get; set; }
+
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
     }

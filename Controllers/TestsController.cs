@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,6 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using Sotis2.Data;
 using Sotis2.Models;
 using Sotis2.Models.DTO;
+using VDS.RDF;
+using VDS.RDF.Ontology;
+using VDS.RDF.Storage;
+using VDS.RDF.Writing;
 
 namespace Sotis2.Controllers
 {
@@ -340,5 +346,282 @@ namespace Sotis2.Controllers
             questionWithAnswaresDTO.Answares.Append(new Answare("Odgovori", true));
             return PartialView("QuestionEditor", questionWithAnswaresDTO);
         }
+
+        public  ActionResult ExportRDF()
+        {
+            string path = "C:\\Users\\Panonit\\Desktop\\owlS\\ConvertTests\\exp_2.owl";
+
+            
+
+            string fullPath = "http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/"; // &untitled-ontology-7;
+
+            List<Test> tests = _context.Tests.ToList();
+            foreach (Test test in tests)
+            {
+                using (StreamWriter sw = System.IO.File.AppendText(path))
+                {
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \""+fullPath + (test.Name ==null ? test.Name : test.Name.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Test\"/>");
+                    sw.WriteLine("    <startTimeOfTest rdf:datatype = \"&xsd;dateTime\">" + test.StartOfTest + "</startTimeOfTest>");
+                    sw.WriteLine("</owl:NamedIndividual >");
+                }
+            }
+            /*
+            List<Subject> subjects = _context.Subjects.ToList();
+            foreach (Subject subject in subjects)
+            {
+                using (StreamWriter sw = System.IO.File.AppendText(path))
+                {
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath  + (subject.NameOfSubject == null ? subject.NameOfSubject : subject.NameOfSubject.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Test\"/>");
+                    sw.WriteLine("</owl:NamedIndividual >");
+                }
+
+            }*/
+
+            /*
+            List<Course> courses = _context.Courses.ToList();
+            foreach (Course course in courses)
+            {
+                using (StreamWriter sw = System.IO.File.AppendText(path))
+                {
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath + (course.Name == null ? course.Name : course.Name.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Test\"/>");
+                    sw.WriteLine("</owl:NamedIndividual >");
+                }
+
+            }*/
+
+            List<Question> questions = _context.Questions.ToList();
+            foreach (Question question in questions)
+            {
+                using (StreamWriter sw = System.IO.File.AppendText(path))
+                {
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath + (question.QuestionText == null ? question.QuestionText : question.QuestionText.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Question\"/>");
+                    sw.WriteLine("</owl:NamedIndividual >");
+                }
+
+            }
+
+            List<Domain> domains = _context.Domains.ToList();
+            foreach (Domain domain in domains)
+            {
+                using (StreamWriter sw = System.IO.File.AppendText(path))
+                {
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath +  (domain.Type == null ? domain.Type : domain.Type.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Domain\"/>");
+                    sw.WriteLine("</owl:NamedIndividual >");
+                }
+
+            }
+
+            foreach (Attempt attempt in attempts)
+            {
+                using (StreamWriter sw = System.IO.File.AppendText(path))
+                {
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath + (attempt.Name == null ? attempt.Name : attempt.Name.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Attempt\"/>");
+                    sw.WriteLine("    <precentOfCorrect rdf:datatype = \"&xsd;float\" >" + attempt.Accuracy.ToString() + "</precentOfCorrect>");
+                    sw.WriteLine("</owl:NamedIndividual >");
+
+                    sw.WriteLine("<rdf:Description>");
+                    sw.WriteLine("<rdf:type rdf:resource = \"&owl;NegativePropertyAssertion\"/>");
+                    sw.WriteLine("  <owl:targetIndividual rdf:resource = \"http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/E2/144/2017\" />");
+                    sw.WriteLine("  <owl:sourceIndividual rdf:resource = \"http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/Pokusaj\" />");
+                    sw.WriteLine("  <owl:assertionProperty rdf:resource = \"http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/attemptByStudent\" />");
+                    sw.WriteLine("</rdf:Description >");
+                }
+
+            }
+
+            List<Answare> answares = _context.Answares.ToList();
+            foreach (Answare answare in answares)
+            {
+                using (StreamWriter sw = System.IO.File.AppendText(path))
+                {
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath + (answare.AnswareText == null ? answare.AnswareText : answare.AnswareText.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Answare\"/>");
+                    sw.WriteLine("</owl:NamedIndividual >");
+                }
+
+            }
+
+            List<StudentsAnsware> studentsAnswares = _context.StudentsAnswares.ToList();
+            foreach (StudentsAnsware studentsAnsware in studentsAnswares)
+            {
+                using (StreamWriter sw = System.IO.File.AppendText(path))
+                {
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath + (studentsAnsware.AnswareText == null ? studentsAnsware.AnswareText : studentsAnsware.AnswareText.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "AnswareStudent\"/>");
+                    sw.WriteLine("</owl:NamedIndividual >");
+                }
+
+            }
+
+            List<Attempt> attempts = _context.Attempts.ToList();
+            foreach (Attempt attempt in attempts)
+            {
+                using (StreamWriter sw = System.IO.File.AppendText(path))
+                {
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath + (attempt.Name == null ? attempt.Name : attempt.Name.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Attempt\"/>");
+                    sw.WriteLine("    <precentOfCorrect rdf:datatype = \"&xsd;float\" >" + attempt.Accuracy.ToString() + "</precentOfCorrect>");
+                    sw.WriteLine("</owl:NamedIndividual >");
+
+                    sw.WriteLine("<rdf:Description>");
+                    sw.WriteLine("<rdf:type rdf:resource = \"&owl;NegativePropertyAssertion\"/>");
+                    sw.WriteLine("  <owl:targetIndividual rdf:resource = \"http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/E2/144/2017\" />");
+                    sw.WriteLine("  <owl:sourceIndividual rdf:resource = \"http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/Pokusaj\" />");
+                    sw.WriteLine("  <owl:assertionProperty rdf:resource = \"http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/attemptByStudent\" />");
+                    sw.WriteLine("</rdf:Description >");
+                }
+
+            }
+
+
+            IGraph g = new Graph();
+
+            //g.LoadFromFile(path);
+
+
+            //IGraph g = new Graph();
+
+
+            /*
+            IUriNode dotNetRDF = g.CreateUriNode(UriFactory.Create("http://www.dotnetrdf.org"));
+            IUriNode says = g.CreateUriNode(UriFactory.Create("http://example.org/says"));
+            ILiteralNode helloWorld = g.CreateLiteralNode("Hello World");
+            ILiteralNode bonjourMonde = g.CreateLiteralNode("Bonjour tout le Monde", "fr");
+
+            g.Assert(new Triple(dotNetRDF, says, helloWorld));
+            g.Assert(new Triple(dotNetRDF, says, bonjourMonde));*/
+
+            /*
+            var o = new OntologyGraph();
+            var lion = o.CreateOntologyClass(UriFactory.Create("http://my.taxonomies.com/myModel/Lion"));
+            lion.AddType(UriFactory.Create(OntologyHelper.OwlClass));
+            lion.AddLabel("Lion", "en");
+            var animals = o.CreateOntologyClass(UriFactory.Create("http://my.taxonomies.com/myModel/Animals"));
+            lion.AddSuperClass(animals);
+
+            o.CreateIndividual(new Uri("http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#kolokvijum_1"),
+                               new Uri("http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Test"));
+
+            RdfXmlWriter rdfxmlwriter = new RdfXmlWriter();
+            rdfxmlwriter.Save(o, "C:\\Users\\Panonit\\Desktop\\owlS\\ConvertTests\\Tests.owl");*/
+
+
+
+            return Ok();
+        }
+
+        public ActionResult ImportOwl()
+        {
+            //try
+            //{
+                //VirtuosoManager manager = new VirtuosoManager();
+            //"MYDB", "dba", "dba"
+
+            IGraph g = new Graph();
+
+                //virtuoso.LoadGraph(g, new Uri("http://example.org/"));
+            //}
+            //catch
+            //{
+            //    Console.WriteLine();
+            //}
+
+            return Ok();
+        }
+
+        public async Task<IActionResult> Virtuoso()
+        {
+            VirtuosoManager virtuoso = new VirtuosoManager("localhost", 1234, VirtuosoManager.DefaultDB, "dba", "dba");
+            return Ok();
+        }
+
+        public async Task<IActionResult> Iita(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var questions = await _context.Questions.Where(x => x.Test.ID == id).ToListAsync();
+
+            List<List<int>> matrix = new List<List<int>>(); 
+
+            for (int i = 0; i < questions.Count(); i++)
+            {
+                var answers = await _context.Answares.Where(x => x.QuestionID == questions[i].ID).ToListAsync();
+                var answerIDs = answers.Select(x => x.ID);
+
+                var allAtteptsIDs = await _context.TmpAnswares.Where(l => answerIDs.Any(id => id == l.AnswareID)).Select(e => e.AttemptID).Distinct().ToListAsync();
+                //var allAtteptsIDs = await _context.TmpAnswares.Where(y => y.WasChecked).OrderBy(z => z.AttemptID).Select(e => e.AttemptID).Distinct().ToListAsync();
+               // var allAttepts = await _context.Attempts.Where(l => allAtteptsIDs.Any(id => id == l.ID)).ToListAsync();//.OrderBy(l => allAtteptsIDs.IndexOf(l.ID));
+
+                if (matrix.Count == 0)
+                {
+                    for (int j = 0; j < allAtteptsIDs.Count; j++)
+                    {
+                        matrix.Add(new List<int>());
+                    }
+                }
+
+                var tmpAnswers = await _context.TmpAnswares.Where(y => y.WasChecked).OrderBy(z => z.AttemptID).ToListAsync();
+
+                bool IsQuestinoRight = true;
+
+                for (int j = 0; j < allAtteptsIDs.Count; j++)
+                {
+                    // Check if attempt is for this test by checking questions from attepts
+
+                    //for (int w = 0; w < questions.Count; w++)
+                    //{
+                    //    if(questions[w].ID == allAttepts[j].) 
+                    //}
+
+                    //continue;
+
+
+                    IsQuestinoRight = true;
+                    for (int q = 0; q < tmpAnswers.Count; q++)
+                    {
+                        if(allAtteptsIDs[j] == tmpAnswers[q].AttemptID)
+                        {
+                            for (int a = 0; a < answers.Count(); a++)
+                            {
+                                if ( answers[a].ID == tmpAnswers[q].AnswareID)
+                                {
+                                    if( answers[a].IsItTrue != tmpAnswers[q].WasChecked)
+                                    {
+                                        IsQuestinoRight = false;
+                                        goto nextOne;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                nextOne:
+
+                    matrix[j].Add(Convert.ToInt32(IsQuestinoRight));
+                }
+            }
+
+            //var attempts = await _context.Attempts.Where(x => x.)
+            if (questions == null)
+            {
+                return NotFound();
+            }
+
+            string json = JsonSerializer.Serialize(matrix);
+
+            return Redirect("http://127.0.0.23:5001/iita?json=" + json);
+
+            //return View(questions);
+        }
+
     }
 }

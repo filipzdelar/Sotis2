@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Sotis2.Models.Users;
 using Sotis2.Models.DTO;
+using Sotis2.Models.Relations;
 
 namespace Sotis2.Data
 {
@@ -26,6 +27,9 @@ namespace Sotis2.Data
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<TmpAnsware> TmpAnswares { get; set; }
+        public DbSet<StudentsAnsware> StudentsAnswares { get; set; }
+        public DbSet<EdgeQD> EdgeQDs { get; set; }
+        public DbSet<EdgeDD> EdgeDDs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +44,9 @@ namespace Sotis2.Data
             modelBuilder.Entity<Domain>().ToTable("Domain"); 
             modelBuilder.Entity<AppUser>().ToTable("AppUser");
             modelBuilder.Entity<Course>().ToTable("Course");
+            modelBuilder.Entity<StudentsAnsware>().ToTable("StudentsAnsware");
+            modelBuilder.Entity<EdgeQD>().ToTable("EdgeQD");
+            modelBuilder.Entity<EdgeDD>().ToTable("EdgeDD");
 
 
             //modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");

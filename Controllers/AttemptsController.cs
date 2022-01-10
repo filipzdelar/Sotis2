@@ -2,21 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sotis2.Data;
 using Sotis2.Models;
 using Sotis2.Models.DTO;
+using Sotis2.Models.Relations;
+using Sotis2.Models.Users;
 
 namespace Sotis2.Controllers
 {
     public class AttemptsController : Controller
     {
         private readonly DBContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AttemptsController(DBContext context)
+        public AttemptsController(DBContext context, UserManager<AppUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -156,6 +161,7 @@ namespace Sotis2.Controllers
 
         public async Task<IActionResult> StartAttempt(long? id)
         {
+
             if (id == null)
             {
                 return NotFound();
@@ -174,13 +180,14 @@ namespace Sotis2.Controllers
         private async Task<AttemptDTO> PreprocessQuestionsAsync(List<Question> questionsInChaos)
         {
             Attempt attempt = new Attempt();
+            attempt.StartTime = DateTime.Now;
             _context.Add(attempt);
             await _context.SaveChangesAsync();
 
             AttemptDTO attemptDTO = new AttemptDTO();
             attemptDTO.TmpQuestionDTOs = new List<TmpQuestionDTO>();
 
-            List<Question> questionsInOrder = questionsInChaos;
+            List<Question> questionsInOrder = questionsInChaos; //OrderAsync
             List<Answare> answares = new List<Answare>();
 
             foreach (Question question in questionsInOrder)
@@ -212,6 +219,62 @@ namespace Sotis2.Controllers
             attemptDTO.TotalNumberOfQuestions = attemptDTO.TmpQuestionDTOs.Count();
 
             return attemptDTO;
+        }
+
+        private async Task<List<Question>> OrderAsync(List<Question> questionsInChaos)
+        {
+            List<Domain> domains = await _context.Domains.ToListAsync();
+            List<EdgeDD> edgeDDs = await _context.EdgeDDs.ToListAsync();
+            List<EdgeQD> edgeQDs = await _context.EdgeQDs.ToListAsync();
+
+            //int[,] matrix = new int[questionsInChaos.Count + domains.Count, questionsInChaos.Count + domains.Count];
+            int[,] matrix = new int[domains.Count, domains.Count];
+
+            for (int e = 0; e < edgeDDs.Count; e++)
+            {
+                for (int d = 0; d < domains.Count; d++)
+                {
+                    if (edgeDDs[e].DomainFromID == domains[d].ID)
+                    {
+                        for (int d2 = 0; d2 < domains.Count; d2++)
+                        {
+                            if(edgeDDs[e].DomainToID == domains[d2].ID)
+                            {
+                                matrix[d, d2] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            List<int> ord = new List<int>();
+            bool hasNonNegativeValues = true;
+            bool hasNotZeroes = true;
+            
+            while(hasNonNegativeValues) 
+            {
+                hasNonNegativeValues = false;
+                for (int d = 0; d < domains.Count; d++)
+                {
+                    hasNotZeroes = true;
+                    for (int d2 = 0; d2 < domains.Count; d2++)
+                    {
+                        if(matrix[d2, d] == 1)
+                        {
+                            hasNonNegativeValues = true;
+                            hasNotZeroes = false;
+                            break;
+                        }
+
+                        if (matrix[d2, d] == 0)
+                        {
+                            hasNonNegativeValues = true;
+                        }
+                    }
+                } 
+            }
+            
+            return questionsInChaos;
         }
 
         /*
@@ -249,10 +312,13 @@ namespace Sotis2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Next( AttemptDTO attemptDTO)
+        public async Task<IActionResult> NextAsync( AttemptDTO attemptDTO)
         {
             // [Bind("ID,TakenTime,Accuracy,Grade,StartTime,EndTime")]
             //attemptDTO.TmpSerialQuestion
+
+            AppUser applicationUser = await _userManager.GetUserAsync(User);
+
             for (int i = 0; i < attemptDTO.TmpQuestionDTOs.Count(); i++)
             {
                 if(attemptDTO.TmpQuestionDTOs[i].QuestionText == null)
@@ -261,11 +327,59 @@ namespace Sotis2.Controllers
                 } 
             }
 
-            Answare answare = new Answare();
+            for (int k = 0; k < attemptDTO.TmpQuestionDTOs[attemptDTO.TmpSerialQuestion-1].TmpAnswaresDTO.Count(); k++)
+            {
+                TmpAnsware tmpAnsware = await _context.TmpAnswares.FindAsync(attemptDTO.TmpQuestionDTOs[attemptDTO.TmpSerialQuestion-1].TmpAnswaresDTO[k].ID);
+                tmpAnsware.WasChecked = attemptDTO.TmpQuestionDTOs[attemptDTO.TmpSerialQuestion-1].TmpAnswaresDTO[k].WasChecked;
+                _context.TmpAnswares.Update(tmpAnsware);
+                await _context.SaveChangesAsync();
+
+            }
             //answare.
 
-            if(attemptDTO.TmpSerialQuestion == attemptDTO.TotalNumberOfQuestions)
+            Answare answare;
+            float points = 0;
+            int numberOfAnswares = 0;
+            if (attemptDTO.TmpSerialQuestion == attemptDTO.TotalNumberOfQuestions)
             {
+                for (int q = 0; q < attemptDTO.TmpQuestionDTOs.Count(); q++)
+                {
+                    for (int a = 0; a < attemptDTO.TmpQuestionDTOs[q].TmpAnswaresDTO.Count(); a++)
+                    {
+                        answare = await _context.Answares.FindAsync(attemptDTO.TmpQuestionDTOs[q].TmpAnswaresDTO[a].AnswareID);
+
+
+                        StudentsAnsware studentsAnsware = new StudentsAnsware();
+                        studentsAnsware.AnswareID = attemptDTO.TmpQuestionDTOs[q].TmpAnswaresDTO[a].AnswareID;
+                        studentsAnsware.AnswareText = answare.AnswareText;
+
+                        if (attemptDTO.TmpQuestionDTOs[q].TmpAnswaresDTO[a].WasChecked == answare.IsItTrue)
+                        {
+                            studentsAnsware.IsItTrue = true;
+                            points++;
+                        }
+                        else
+                        {
+                            studentsAnsware.IsItTrue = false;
+                        }
+
+                        _context.StudentsAnswares.Add(studentsAnsware);
+                        await _context.SaveChangesAsync();
+
+                        numberOfAnswares++;
+                    }
+                }
+
+                Attempt attempt = await _context.Attempts.FindAsync(attemptDTO.TmpQuestionDTOs[0].TmpAnswaresDTO[0].AttemptID);
+                attempt.Accuracy = points / numberOfAnswares;
+                attempt.Name = "Filip";
+                attempt.Surname = "Zdelar";
+                attempt.Grade = (int) System.Math.Round(attempt.Accuracy * 10);
+                attempt.EndTime = DateTime.Now;
+                attempt.TakenTime = attempt.EndTime - attempt.StartTime;
+                _context.Update(attempt);
+                await _context.SaveChangesAsync();
+
                 return View("Complited");
             }
             else

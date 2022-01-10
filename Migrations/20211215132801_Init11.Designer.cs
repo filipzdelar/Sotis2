@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sotis2.Data;
 
 namespace Sotis2.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20211215132801_Init11")]
+    partial class Init11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,42 +264,6 @@ namespace Sotis2.Migrations
                     b.HasIndex("TestID");
 
                     b.ToTable("Question");
-                });
-
-            modelBuilder.Entity("Sotis2.Models.Relations.EdgeDD", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("DomainFromID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("DomainToID")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("EdgeDD");
-                });
-
-            modelBuilder.Entity("Sotis2.Models.Relations.EdgeQD", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("DomainToID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("QuestionFromID")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("EdgeQD");
                 });
 
             modelBuilder.Entity("Sotis2.Models.StudentsAnsware", b =>
