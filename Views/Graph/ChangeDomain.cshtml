@@ -1,8 +1,29 @@
 ﻿@page
-@model Sotis2.Models.Graph.DTO.GraphDTO
 @{
+
+    //@model Sotis2.Models.Graph.DTO.GraphDTO
     //ViewData["Title"] = "Home page";
     //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+    //var idd = ViewContext.RouteData.Values["id"];
+
+
+    //var t = Model;
+    //var p = Model.testID;
+    /*
+    <h1 id="tid">
+
+
+        {}
+        @if (@Model != null)
+        {@Model.Nodes.Count();
+
+    }
+    else { Console.WriteLine("smth"); }
+    </h1>*/
 }
 
 <style>
@@ -42,69 +63,75 @@
         network.addEdgeMode();
     }
 
+    function handleGetJson() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('id');
+        fetch('/api/graph?id=' + myParam.toString()) //../schema
+            .then((response) => {
+                // Now process the JSON:
+                //console(response.text);
+                window.alert(response)
+                response.json().then((data) => {
+                    // Log the data :  api/graph/
+                    console.log(data);
 
-    fetch('/api/graph/test') //./schema
-        .then((response) => {
-            // Now process the JSON:
-            response.json().then((data) => {
-                // Log the data :  api/graph/
-                console.log(data);
+                    nodes = data['nodes'];
+                    dataf = data;
 
-                nodes = data['nodes'];
-                dataf = data;
-
-                data['nodes'] = new vis.DataSet(data['nodes']);
-                // Now display the graph using vis.js:
-                var options = {
-                    edges: {
-                        arrows: {
-                            to: { enabled: true },
-                            from: { enabled: false }
-                        }
-                    },
-                    manipulation: {
-                        enabled: false,
-                        addNode: function (data, callback) {
-                            // filling in the popup DOM elements
-                            console.log('add', data);
+                    data['nodes'] = new vis.DataSet(data['nodes']);
+                    // Now display the graph using vis.js:
+                    var options = {
+                        edges: {
+                            arrows: {
+                                to: { enabled: true },
+                                from: { enabled: false }
+                            }
                         },
-                        editNode: function (data, callback) {
-                            // filling in the popup DOM elements
-                            console.log('edit', data);
-                        },
-                        addEdge: function (data, callback) {
-                            console.log('add edge', data);
-                            if (data.from == data.to) {
-                                var r = confirm("Do you want to connect the node to itself?");
-                                if (r === true) {
+                        manipulation: {
+                            enabled: false,
+                            addNode: function (data, callback) {
+                                // filling in the popup DOM elements
+                                console.log('add', data);
+                            },
+                            editNode: function (data, callback) {
+                                // filling in the popup DOM elements
+                                console.log('edit', data);
+                            },
+                            addEdge: function (data, callback) {
+                                console.log('add edge', data);
+                                if (data.from == data.to) {
+                                    var r = confirm("Do you want to connect the node to itself?");
+                                    if (r === true) {
+                                        callback(data);
+                                    }
+                                }
+                                else {
                                     callback(data);
                                 }
+                                // after each adding you will be back to addEdge mode
+
                             }
-                            else {
-                                callback(data);
-                            }
-                            // after each adding you will be back to addEdge mode
-                         
                         }
-                    }
-                };
+                    };
 
-                var container = document.getElementById('mynetwork');
+                    var container = document.getElementById('mynetwork');
 
-                network = new vis.Network(container, data, options);
-                // var network = new vis.Network(container, data, dsoptions);
+                    network = new vis.Network(container, data, options);
+                    // var network = new vis.Network(container, data, dsoptions);
 
-                // here you init the addEdge mode
-
+                    // here you init the addEdge mode
 
 
 
+
+                });
+            })
+            .catch((err) => {
+                alert("Fetching Graph Schema Failed: " + err);
             });
-        })
-        .catch((err) => {
-            alert("Fetching Graph Schema Failed: " + err);
-        });
+    }
 
+    handleGetJson();
     //var network = new vis.Network(container, data, options);
 
 

@@ -17,6 +17,8 @@ namespace Sotis2.Controllers
     [Route("api/graph")]
     public class GraphController : Controller
     {
+        private long? _testID;
+
         private readonly IGraphService service;
 
         private readonly DBContext _context;
@@ -25,6 +27,7 @@ namespace Sotis2.Controllers
         {
             _context = context;
             this.service = service;
+            _testID = null;
         }
 
         [HttpGet("schema")]
@@ -123,10 +126,11 @@ namespace Sotis2.Controllers
             //return RedirectToPage("", target);// Ok(target); //View
         }
 
-        [HttpGet("test")]
+        /*
+
         public ActionResult<GraphDTO> Test()
         {
-            long Testid = 4;
+            long Testid = 4;//(long) _testID;
             //Test test = _context.Tests.Find("1");
 
             List<Domain> domains = _context.Domains.ToList();
@@ -182,45 +186,15 @@ namespace Sotis2.Controllers
                 }
             }
 
-            //source.Edges = new List<Edge>();
-            /*
-            for (int i = 0; i < source.Edges.Count(); i++)
-            {
-                if (i < source.Edges.Count() - 5)
-                {
-                    source.Edges[i].From = source.Nodes[i].Id;
-                    source.Edges[i].To = source.Nodes[i + 1].Id;
-                    source.Edges[i].Name = "";
-                }
-                source.Edges[i].Name = "";
-
-            }*/
-
-            //source.Nodes = new List<Node>();
-            //source.Edges = new List<Edge>();
-            /*
-            for (int i = 0; i < domains.Count(); i++)
-            {
-                source.Nodes.Add(new Node());
-                source.Nodes[i].Name = domains[i].Type;
-            }
-
-            for (int i = 0; i < 1; i++)
-            {
-                source.Edges.Add(new Edge());
-                source.Edges[i].From = source.Nodes[i].Id;
-                source.Edges[i].To = source.Nodes[i + 1].Id;
-                source.Edges[i].Name = "";
-            }*/
-
             var target = Converters.Convert(source);
             // VIew
             return Ok(target);
             //return RedirectToPage("", target);// Ok(target); //View
-        }
-
+        }*/
+        
         public ActionResult ChangeDomain(int? id)
         {
+            _testID = id;
             List<Domain> domains = _context.Domains.ToList();
             List<Question> questions = _context.Questions.Where(x => x.Test.ID == id).ToList();
 
@@ -262,9 +236,11 @@ namespace Sotis2.Controllers
                 }
             }
 
-            var target = Converters.Convert(source);
+            GraphDTO target = Converters.Convert(source);
+            //GraphDTO target2 = new GraphDTO();
+            target.testID = id;
 
-            return View(target);
+            return Ok(target); //View
         }
 
         [HttpGet("saveaload")]

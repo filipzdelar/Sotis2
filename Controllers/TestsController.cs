@@ -416,24 +416,6 @@ namespace Sotis2.Controllers
 
             }
 
-            foreach (Attempt attempt in attempts)
-            {
-                using (StreamWriter sw = System.IO.File.AppendText(path))
-                {
-                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath + (attempt.Name == null ? attempt.Name : attempt.Name.Replace(' ', '_')) + "\">");
-                    sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Attempt\"/>");
-                    sw.WriteLine("    <precentOfCorrect rdf:datatype = \"&xsd;float\" >" + attempt.Accuracy.ToString() + "</precentOfCorrect>");
-                    sw.WriteLine("</owl:NamedIndividual >");
-
-                    sw.WriteLine("<rdf:Description>");
-                    sw.WriteLine("<rdf:type rdf:resource = \"&owl;NegativePropertyAssertion\"/>");
-                    sw.WriteLine("  <owl:targetIndividual rdf:resource = \"http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/E2/144/2017\" />");
-                    sw.WriteLine("  <owl:sourceIndividual rdf:resource = \"http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/Pokusaj\" />");
-                    sw.WriteLine("  <owl:assertionProperty rdf:resource = \"http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/attemptByStudent\" />");
-                    sw.WriteLine("</rdf:Description >");
-                }
-
-            }
 
             List<Answare> answares = _context.Answares.ToList();
             foreach (Answare answare in answares)
