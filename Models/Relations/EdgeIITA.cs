@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Sotis2.Models.Relations
 {
-    public class EdgeIITA
+    public class EdgeDD
     {
-        public EdgeIITA() { }
+        public EdgeDD() { }
 
-        public EdgeIITA(long f, long t)
+        public EdgeDD(long f, long t)
         {
             DomainFromID =  f;
             DomainToID = t;
@@ -21,14 +21,10 @@ namespace Sotis2.Models.Relations
         [Key]
         public int ID { get; set; }
 
-        //[ForeignKey("Domain")]
+        [ForeignKey("Domain")]
         public long DomainFromID { get; set; }
 
-        //[ForeignKey("Domain")]
+        [ForeignKey("Domain")]
         public long DomainToID { get; set; }
-
-
-        [ForeignKey("Test")]
-        public long TestID { get; set; }
     }
 }

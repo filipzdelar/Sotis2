@@ -17,5 +17,7 @@ namespace Sotis2.Models.Graph.DTO
         [JsonProperty("selection.set.index")]
         public int SelectionSetIndex { get; set; }
         public int v { get; set; }
+
+        public int testID { get; set; }
     }
 }

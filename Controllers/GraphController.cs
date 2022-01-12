@@ -126,11 +126,11 @@ namespace Sotis2.Controllers
             //return RedirectToPage("", target);// Ok(target); //View
         }
 
-        /*
 
-        public ActionResult<GraphDTO> Test()
+        [HttpGet("test")]
+        public ActionResult<GraphDTO> Test(int id)
         {
-            long Testid = 4;//(long) _testID;
+            long Testid = (long) id;//(long) _testID;
             //Test test = _context.Tests.Find("1");
 
             List<Domain> domains = _context.Domains.ToList();
@@ -190,7 +190,7 @@ namespace Sotis2.Controllers
             // VIew
             return Ok(target);
             //return RedirectToPage("", target);// Ok(target); //View
-        }*/
+        }
         
         public ActionResult ChangeDomain(int? id)
         {
@@ -240,7 +240,7 @@ namespace Sotis2.Controllers
             //GraphDTO target2 = new GraphDTO();
             target.testID = id;
 
-            return Ok(target); //View
+            return View(target); //View
         }
 
         [HttpGet("saveaload")]
@@ -307,16 +307,117 @@ namespace Sotis2.Controllers
             return Convert.ToInt64(id) - 1000000;
         }
 
-        [HttpGet("iita/{json}")]
-        public ActionResult<GraphDTO> Iita(string json)
+        [HttpGet("iita")]
+        public ActionResult<GraphDTO> Iita(int? id)
+        {
+            // VIew
+            List<Domain> domains = _context.Domains.ToList();
+            List<Question> questions = _context.Questions.Where(x => x.Test.ID == id).ToList();
+
+            var source = service.GetGraphSchema("Nodes");
+
+            for (int i = 0; i < source.Nodes.Count(); i++)
+            {
+                //source.Nodes[i].Name = "Q" + i.ToString();
+                if (i <= domains.Count() - 1)
+                {
+
+                    source.Nodes[i].Name = domains[i].Type;
+                }
+                else if (i <= domains.Count() + questions.Count() - 1)
+                {
+                    source.Nodes[i].Name = questions[i - domains.Count()].QuestionText;
+                }
+            }
+
+
+
+            for (int i = source.Nodes.Count() - 1; i >= domains.Count() + questions.Count(); i--)
+            {
+                source.Nodes.RemoveAt(i);
+            }
+
+            List<List<int>> edgesFromDS = new List<List<int>>();
+            // [[0, 2], [1, 3], [2, 4], [3, 5], [4, 1], [4, 5]]
+            edgesFromDS.Add(new List<int>() { 0, 2 });
+            edgesFromDS.Add(new List<int>() { 1, 3 });
+            edgesFromDS.Add(new List<int>() { 2, 4 });
+            edgesFromDS.Add(new List<int>() { 3, 5 });
+            edgesFromDS.Add(new List<int>() { 4, 1 });
+            edgesFromDS.Add(new List<int>() { 4, 5 });
+
+
+            for (int i = source.Edges.Count() - 1; i >= 0; i--)
+            {
+                if (i < edgesFromDS.Count())
+                {
+                    source.Edges[i].From = edgesFromDS[i][0];
+                    source.Edges[i].To = edgesFromDS[i][1];
+                    source.Edges[i].Name = "";
+                }
+                else
+                {
+                    source.Edges.RemoveAt(i);
+                }
+            }
+
+            GraphDTO target = Converters.Convert(source);
+            //GraphDTO target2 = new GraphDTO();
+
+            return Ok(target); //View
+            //return RedirectToPage("", target);// Ok(target); //View
+        }
+
+
+        [HttpGet("IitaChangeDomain/{json}")]
+        public ActionResult IitaChangeDomain(string json)
         {
             Console.WriteLine(json);
             IitaResonseDTO graph = JsonConvert.DeserializeObject<IitaResonseDTO>(json);
             //{'diff': array([0.        , 0.088     , 0.49614035]), 'implications': [(0, 2), (1, 3), (2, 4), (3, 5), (4, 1), (4, 5)], 'error.rate': -0.0, 'selection.set.index': 0, 'v': 1}
             // VIew
-            return View();
-            //return RedirectToPage("", target);// Ok(target); //View
-        }
+            List<Domain> domains = _context.Domains.ToList();
+            List<Question> questions = _context.Questions.Where(x => x.Test.ID == graph.testID).ToList();
 
+
+            var source = service.GetGraphSchema("Nodes");
+
+            for (int i = 0; i < source.Nodes.Count(); i++)
+            {
+                //source.Nodes[i].Name = "Q" + i.ToString();
+                if (i <= domains.Count() - 1)
+                {
+
+                    source.Nodes[i].Name = domains[i].Type;
+                }
+                else if (i <= domains.Count() + questions.Count() - 1)
+                {
+                    source.Nodes[i].Name = questions[i - domains.Count()].QuestionText;
+                }
+            }
+
+
+
+            for (int i = source.Nodes.Count() - 1; i >= domains.Count() + questions.Count(); i--)
+            {
+                source.Nodes.RemoveAt(i);
+            }
+
+            for (int i = graph.implications.Count() - 1; i >= 0; i--)
+            {
+
+                source.Edges[i].From = graph.implications[i][0];
+                source.Edges[i].To = graph.implications[i][1];
+                source.Edges[i].Name = "";
+
+
+            }
+
+            GraphDTO target = Converters.Convert(source);
+            //GraphDTO target2 = new GraphDTO();
+            target.testID = graph.testID;
+
+            return View(target); //View
+        }
     }
 }

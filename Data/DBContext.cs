@@ -30,6 +30,7 @@ namespace Sotis2.Data
         public DbSet<StudentsAnsware> StudentsAnswares { get; set; }
         public DbSet<EdgeQD> EdgeQDs { get; set; }
         public DbSet<EdgeDD> EdgeDDs { get; set; }
+        public DbSet<EdgeIITA> EdgeIITAs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +48,7 @@ namespace Sotis2.Data
             modelBuilder.Entity<StudentsAnsware>().ToTable("StudentsAnsware");
             modelBuilder.Entity<EdgeQD>().ToTable("EdgeQD");
             modelBuilder.Entity<EdgeDD>().ToTable("EdgeDD");
+            modelBuilder.Entity<EdgeIITA>().ToTable("EdgeIITA");
 
 
             //modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
