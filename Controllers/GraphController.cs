@@ -306,5 +306,17 @@ namespace Sotis2.Controllers
         {
             return Convert.ToInt64(id) - 1000000;
         }
+
+        [HttpGet("iita/{json}")]
+        public ActionResult<GraphDTO> Iita(string json)
+        {
+            Console.WriteLine(json);
+            IitaResonseDTO graph = JsonConvert.DeserializeObject<IitaResonseDTO>(json);
+            //{'diff': array([0.        , 0.088     , 0.49614035]), 'implications': [(0, 2), (1, 3), (2, 4), (3, 5), (4, 1), (4, 5)], 'error.rate': -0.0, 'selection.set.index': 0, 'v': 1}
+            // VIew
+            return View();
+            //return RedirectToPage("", target);// Ok(target); //View
+        }
+
     }
 }
