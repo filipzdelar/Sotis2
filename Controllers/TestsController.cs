@@ -598,7 +598,10 @@ namespace Sotis2.Controllers
                 return NotFound();
             }
 
-            string json = JsonSerializer.Serialize(matrix);
+            List<object> m = new List<object>();
+            m.Add(matrix);
+            m.Add(id);
+            string json = JsonSerializer.Serialize(m);
 
             return Redirect("http://127.0.0.23:5001/iita?json=" + json);
 
