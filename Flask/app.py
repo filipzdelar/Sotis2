@@ -4,10 +4,10 @@ path = os.getcwd()
 
 print(path)
 
-from flask import Flask
+from flask import Flask,redirect
 from flask import request
 import json
-
+import numpy as np
     
 import pandas as pd
 from learning_spaces.kst.iita import iita_exclude_transitive
@@ -49,6 +49,8 @@ def create_app(test_config=None):
         #matrix = json.load(username)
         x = json.loads(username, object_hook=lambda d: SimpleNamespace(**d))
         print(x)
+        x = np.array(x).T.tolist()
+        print(x)
         z = {}
         for y in range(len(x)):
             z["attempt" + str(y)] = x[y]
@@ -56,8 +58,11 @@ def create_app(test_config=None):
         print(z)
         data_frame = pd.DataFrame(z)
         print("ok")
+        print(z)
         response = iita_exclude_transitive(data_frame, v=1)
-        print(response)
-        return str(response) #+ str(username)
+        print((str(response).replace('(',"[").replace(')',"]").replace('array','')).replace('. ', '').replace('\'', '"'))
+
+        return redirect("https://localhost:5001/api/graph/iita/"+(str(response).replace('(',"[").replace(')',"]").replace('array','')).replace('. ', '').replace('\'', '"'), code=200)
+        #return str(response) #+ str(username)
     
     return app

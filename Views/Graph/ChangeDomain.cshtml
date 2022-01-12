@@ -1,4 +1,5 @@
 ﻿@page
+@model Sotis2.Models.Graph.DTO.GraphDTO
 @{
 
     //@model Sotis2.Models.Graph.DTO.GraphDTO
@@ -26,6 +27,7 @@
     </h1>*/
 }
 
+<div id="id_test"> @Html.DisplayNameFor(model => model.testID)</div>
 <style>
     body {
         color: #d3d3d3;
@@ -65,8 +67,9 @@
 
     function handleGetJson() {
         const urlParams = new URLSearchParams(window.location.search);
-        const myParam = urlParams.get('id');
-        fetch('/api/graph?id=' + myParam.toString()) //../schema
+        //const myParam = urlParams.get('id_test');
+        var x = document.getElementById("id_test").textContent;
+        fetch('/api/graph?id=' + x.toString()) //../schema
             .then((response) => {
                 // Now process the JSON:
                 //console(response.text);
