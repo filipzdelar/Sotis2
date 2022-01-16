@@ -16,6 +16,10 @@ namespace Sotis2.Models.Graph.DTO
 
         [JsonProperty("group")]
         public string Group { get; set; }
+
+
+        [JsonProperty("color")]
+        public string Color { get; set; }
     }
 
 }

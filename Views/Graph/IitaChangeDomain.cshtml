@@ -79,6 +79,15 @@
                     // Log the data :  api/graph/
                     console.log(data);
 
+                    for (i = 0; i < data['edges'].length; i++) {
+                        data["edges"][i]["color"] = { color: "red" }
+                    }
+
+                    /*
+                    for (y = 0; y < data['nodes'].length; y++) {
+                        data["nodes"][y]["color"] = data[""][i]
+                    }*/
+
                     nodes = data['nodes'];
                     dataf = data;
 
