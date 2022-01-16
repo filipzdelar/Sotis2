@@ -34,5 +34,7 @@ namespace Sotis2.Models.Graph.DTO
 
         [JsonProperty("testID")]
         public long? testID { get; set; }
+
+
     }
 }

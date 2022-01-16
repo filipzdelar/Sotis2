@@ -171,13 +171,13 @@ namespace Sotis2.Controllers
                 {
                     source.Edges[i].From = (int)edgeDDs[i].DomainFromID;// source.Nodes[i].Id;
                     source.Edges[i].To = (int)edgeDDs[i].DomainToID;
-                    source.Edges[i].Name = "";
+                    source.Edges[i].Name = "nn";
                 }
                 else if(i < edgeQDs.Count + edgeDDs.Count)
                 {
                     source.Edges[i].From = (int)edgeQDs[i - edgeDDs.Count].QuestionFromID;// source.Nodes[i].Id;
                     source.Edges[i].To = (int)edgeQDs[i - edgeDDs.Count].DomainToID;
-                    source.Edges[i].Name = "";
+                    source.Edges[i].Name = "eee";
 
                 }
                 else
@@ -231,7 +231,7 @@ namespace Sotis2.Controllers
                 {
                     source.Edges[i].From = source.Nodes[i].Id;
                     source.Edges[i].To = source.Nodes[i + 1].Id;
-                    source.Edges[i].Name = "";
+                    source.Edges[i].Name = "fff";
 
                 }
             }
@@ -255,6 +255,20 @@ namespace Sotis2.Controllers
             
             return Ok();
         }*/
+
+        private static List<List<int>> InitGraphEdges()
+        {
+            List<List<int>> edgesFromDS = new List<List<int>>();
+            // [[0, 2], [1, 3], [2, 4], [3, 5], [4, 1], [4, 5]]
+            edgesFromDS.Add(new List<int>() { 0, 2 });
+            edgesFromDS.Add(new List<int>() { 1, 3 });
+            edgesFromDS.Add(new List<int>() { 2, 4 });
+            edgesFromDS.Add(new List<int>() { 3, 5 });
+            edgesFromDS.Add(new List<int>() { 4, 1 });
+            edgesFromDS.Add(new List<int>() { 4, 5 });
+            return edgesFromDS;
+        }
+
 
         [HttpGet("save/{json}")]
         public async Task<IActionResult> SaveAsync(string json)
@@ -315,6 +329,7 @@ namespace Sotis2.Controllers
             List<Question> questions = _context.Questions.Where(x => x.Test.ID == id).ToList();
 
             var source = service.GetGraphSchema("Nodes");
+            source.Nodes.Add(new Node());
 
             for (int i = 0; i < source.Nodes.Count(); i++)
             {
@@ -337,22 +352,14 @@ namespace Sotis2.Controllers
                 source.Nodes.RemoveAt(i);
             }
 
-            List<List<int>> edgesFromDS = new List<List<int>>();
-            // [[0, 2], [1, 3], [2, 4], [3, 5], [4, 1], [4, 5]]
-            edgesFromDS.Add(new List<int>() { 0, 2 });
-            edgesFromDS.Add(new List<int>() { 1, 3 });
-            edgesFromDS.Add(new List<int>() { 2, 4 });
-            edgesFromDS.Add(new List<int>() { 3, 5 });
-            edgesFromDS.Add(new List<int>() { 4, 1 });
-            edgesFromDS.Add(new List<int>() { 4, 5 });
-
+            List<List<int>> edgesFromDS = InitGraphEdges();
 
             for (int i = source.Edges.Count() - 1; i >= 0; i--)
             {
                 if (i < edgesFromDS.Count())
                 {
-                    source.Edges[i].From = edgesFromDS[i][0];
-                    source.Edges[i].To = edgesFromDS[i][1];
+                    source.Edges[i].From = source.Nodes[edgesFromDS[i][0] + domains.Count()].Id;
+                    source.Edges[i].To = source.Nodes[edgesFromDS[i][1] + domains.Count()].Id;
                     source.Edges[i].Name = "";
                 }
                 else
@@ -363,6 +370,19 @@ namespace Sotis2.Controllers
 
             GraphDTO target = Converters.Convert(source);
             //GraphDTO target2 = new GraphDTO();
+
+            for (int j = 0; j < target.Nodes.Count(); j++)
+            {
+                if (j < 3)
+                {
+                    target.Nodes[j].Color = "red";
+                }
+                else
+                {
+                    target.Nodes[j].Color = "blue";
+
+                }
+            }
 
             return Ok(target); //View
             //return RedirectToPage("", target);// Ok(target); //View
@@ -381,6 +401,7 @@ namespace Sotis2.Controllers
 
 
             var source = service.GetGraphSchema("Nodes");
+            source.Nodes.Add(new Node());
 
             for (int i = 0; i < source.Nodes.Count(); i++)
             {
@@ -406,14 +427,28 @@ namespace Sotis2.Controllers
             for (int i = graph.implications.Count() - 1; i >= 0; i--)
             {
 
-                source.Edges[i].From = graph.implications[i][0];
-                source.Edges[i].To = graph.implications[i][1];
+                source.Edges[i].From = source.Nodes[graph.implications[i][0] + domains.Count()].Id;
+                source.Edges[i].To = source.Nodes[graph.implications[i][1] + domains.Count()].Id;
                 source.Edges[i].Name = "";
 
 
             }
 
             GraphDTO target = Converters.Convert(source);
+
+            for (int j = 0; j < target.Nodes.Count(); j++)
+            {
+                if (j < 3)
+                {
+                    target.Nodes[j].Color = "red";
+                }
+                else
+                {
+                    target.Nodes[j].Color = "blue";
+
+                }
+            }
+
             //GraphDTO target2 = new GraphDTO();
             target.testID = graph.testID;
 
