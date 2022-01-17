@@ -1,0 +1,26 @@
+﻿@model Sotis2.Models.DTO.SemanticWebDTO
+
+@{
+    ViewData["Title"] = "Semantic Web SPARQL Queries";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Question 3: Sort the list for the students who have passed the test</h1>
+<h1></h1>
+
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="id" value="3" />
+    <input type="hidden" asp-for="lowerBoundery" />
+    <input type="hidden" asp-for="upperBoundery" />
+    <label>Select order</label>
+    <input type="checkbox" asp-for="order" value="true"/>
+    <div class="form-group">
+        <input type="submit" value="Get" asp-action="GetQuestion" class="btn btn-primary" />
+    </div>
+</form>
+<br />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />

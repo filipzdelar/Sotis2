@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Sotis2.Models.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,12 +86,72 @@ namespace Sotis2.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetQuestion(string id)
+        public ActionResult Question1()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Question2()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Question3()
+        {
+            SemanticWebDTO semanticWebDTO = new SemanticWebDTO();
+            semanticWebDTO.order = true;
+            return View(semanticWebDTO);
+        }
+
+        [HttpGet]
+        public ActionResult Question4()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Question5()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Question6()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult GetQuestion(SemanticWebDTO semanticWebDTO)
+        {
+
             string query = "";
-            switch (id)
+            switch (semanticWebDTO.id.ToString())
             {
+                // #1] Prebrojati broj izbornih predmeta po studijskom programu
+                /*
+                    prefix owl: <http://www.owl-ontologies.com/travel.owl#>
+                    prefix travel: <http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/>
+                    prefix w3: <http://www.w3.org/2002/07/owl#>
+                    prefix aiiso: <http://purl.org/vocab/aiiso/schema#>
+
+                    select (STRAFTER(str(?programme ), "-7/")) as ?ProgrammeName COUNT(?programme) as ?Counter
+                    where 
+                    {  
+                          ?course  ?v aiiso:Course 
+                          FILTER(SUBSTR((STRAFTER(str(?course  ), "-7/")), 0 , 5) = "Izbor") .
+                          ?courseNode w3:targetIndividual ?course .
+                          ?courseNode  w3:sourceIndividual ?programme 
+                           FILTER (?programme  != travel:Faculty_of_Technical_Sciences)
+                    }
+                    group by ?programme 
+
+                 */
                 case "1":
+
+                    query = "prefix+owl%3A+%3Chttp%3A%2F%2Fwww.owl-ontologies.com%2Ftravel.owl%23%3E%0D%0Aprefix+travel%3A+%3Chttp%3A%2F%2Fwww.semanticweb.org%2Fpanonit%2Fontologies%2F2021%2F11%2Funtitled-ontology-7%2F%3E%0D%0Aprefix+w3%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0D%0Aprefix+aiiso%3A+%3Chttp%3A%2F%2Fpurl.org%2Fvocab%2Faiiso%2Fschema%23%3E%0D%0A%0D%0Aselect+%28STRAFTER%28str%28%3Fprogramme+%29%2C+%22-7%2F%22%29%29+as+%3FProgrammeName+COUNT%28%3Fprogramme%29+as+%3FCounter%0D%0Awhere+%0D%0A%7B++%0D%0A++++++%3Fcourse++%3Fv+aiiso%3ACourse+%0D%0A++++++FILTER%28SUBSTR%28%28STRAFTER%28str%28%3Fcourse++%29%2C+%22-7%2F%22%29%29%2C+0+%2C+5%29+%3D+%22Izbor%22%29+.%0D%0A++++++%3FcourseNode+w3%3AtargetIndividual+%3Fcourse+.%0D%0A++++++%3FcourseNode++w3%3AsourceIndividual+%3Fprogramme+%0D%0A+++++++FILTER+%28%3Fprogramme++%21%3D+travel%3AFaculty_of_Technical_Sciences%29%0D%0A%7D%0D%0Agroup+by+%3Fprogramme+";
                     break;
 
                 case "2":
@@ -106,8 +167,10 @@ namespace Sotis2.Controllers
                               ?NumberOfESPPoints  FILTER (?NumberOfESPPoints > 4  &&  ?NumberOfESPPoints < 7 ) 
                         }
                      */
+                    int lowerBoundery = (int) semanticWebDTO.lowerBoundery;
+                    int upperBoundery = (int) semanticWebDTO.upperBoundery;
 
-                    query = "prefix+owl%3A+%3Chttp%3A%2F%2Fwww.owl-ontologies.com%2Ftravel.owl%23%3E%0D%0A%0D%0Aselect+%28STRAFTER%28str%28%3Fc%29%2C+%22-7%2F%22%29%29+%3FNumberOfESPPoints+%0D%0Awhere+%0D%0A%7B++%0D%0A++++++%3Fc%0D%0A++++++owl%3AESP_PointsPerCourse++%0D%0A++++++%3FNumberOfESPPoints++FILTER+%28%3FNumberOfESPPoints+%3E+4++%26%26++%3FNumberOfESPPoints+%3C+7+%29+%0D%0A%7D";
+                    query = "prefix+owl%3A+%3Chttp%3A%2F%2Fwww.owl-ontologies.com%2Ftravel.owl%23%3E%0D%0A%0D%0Aselect+%28STRAFTER%28str%28%3Fc%29%2C+%22-7%2F%22%29%29+%3FNumberOfESPPoints+%0D%0Awhere+%0D%0A%7B++%0D%0A++++++%3Fc%0D%0A++++++owl%3AESP_PointsPerCourse++%0D%0A++++++%3FNumberOfESPPoints++FILTER+%28%3FNumberOfESPPoints+%3E+"+lowerBoundery+"++%26%26++%3FNumberOfESPPoints+%3C+"+upperBoundery+"+%29+%0D%0A%7D";
                     break;
 
                 case "3":
@@ -134,8 +197,14 @@ namespace Sotis2.Controllers
                         GROUP BY ?t ?b
                         ORDER BY ?b
                      */
-
-                    query = "%0D%0Aprefix+sw%3A+%3Chttp%3A%2F%2Fwww.semanticweb.org%2Fpanonit%2Fontologies%2F2021%2F11%2Funtitled-ontology-7%2F%3E%0D%0Aprefix+owl%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0D%0Aprefix+xmlns%3A+%3Chttp%3A%2F%2Fwww.owl-ontologies.com%2Ftravel.owl%23%3E%0D%0A%0D%0Aselect+%3Fb++%28GROUP_CONCAT%28CONCAT%28%3Fg1%2C+%3Fg2%29+%3B+SEPARATOR+%3D+%22%2C+%22%29+AS+%3FStudentsNameAndSurname%29%0D%0Awhere+%0D%0A%7B++%0D%0A++++++++%3Fs+++owl%3AtargetIndividual+sw%3ATest_Front_End+.%0D%0A++++++++%3Fs+owl%3AsourceIndividual+%3Ff+.%0D%0A++++++++%3Ff+xmlns%3Aaccuracy+%3Fb+FILTER%28%3Fb+%3E+0.5%29++.%0D%0A++++++++%3Fw+%3Fh+%3Ff+.%0D%0A++++++++%3Fw+%3Fe+xmlns%3AstudentHasAttempt+.%0D%0A++++++++%3Fw+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sourceIndividual%3E+%3Ft+.%0D%0A%0D%0A++++%7B%3Ft+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2Fsurname%3E+%3Fg1%7D%0D%0A+++++++++UNION%0D%0A++++%7B%3Ft+%3Chttp%3A%2F%2Fpurl.org%2Fvocab%2Faiiso%2Fschema%23name%3E+%3Fg2%7D%0D%0A%7D%0D%0AGROUP+BY+%3Ft+%3Fb%0D%0AORDER+BY+%3Fb";
+                    if ((bool) semanticWebDTO.order)
+                    {
+                        query = "%0D%0Aprefix+sw%3A+%3Chttp%3A%2F%2Fwww.semanticweb.org%2Fpanonit%2Fontologies%2F2021%2F11%2Funtitled-ontology-7%2F%3E%0D%0Aprefix+owl%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0D%0Aprefix+xmlns%3A+%3Chttp%3A%2F%2Fwww.owl-ontologies.com%2Ftravel.owl%23%3E%0D%0A%0D%0Aselect+%3Fb++%28GROUP_CONCAT%28CONCAT%28%3Fg1%2C+%3Fg2%29+%3B+SEPARATOR+%3D+%22%2C+%22%29+AS+%3FStudentsNameAndSurname%29%0D%0Awhere+%0D%0A%7B++%0D%0A++++++++%3Fs+++owl%3AtargetIndividual+sw%3ATest_Front_End+.%0D%0A++++++++%3Fs+owl%3AsourceIndividual+%3Ff+.%0D%0A++++++++%3Ff+xmlns%3Aaccuracy+%3Fb+FILTER%28%3Fb+%3E+0.5%29++.%0D%0A++++++++%3Fw+%3Fh+%3Ff+.%0D%0A++++++++%3Fw+%3Fe+xmlns%3AstudentHasAttempt+.%0D%0A++++++++%3Fw+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sourceIndividual%3E+%3Ft+.%0D%0A%0D%0A++++%7B%3Ft+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2Fsurname%3E+%3Fg1%7D%0D%0A+++++++++UNION%0D%0A++++%7B%3Ft+%3Chttp%3A%2F%2Fpurl.org%2Fvocab%2Faiiso%2Fschema%23name%3E+%3Fg2%7D%0D%0A%7D%0D%0AGROUP+BY+%3Ft+%3Fb%0D%0AORDER+BY+%3Fb";
+                    }
+                    else
+                    {
+                        query = "prefix+sw%3A+%3Chttp%3A%2F%2Fwww.semanticweb.org%2Fpanonit%2Fontologies%2F2021%2F11%2Funtitled-ontology-7%2F%3E%0D%0Aprefix+owl%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0D%0Aprefix+xmlns%3A+%3Chttp%3A%2F%2Fwww.owl-ontologies.com%2Ftravel.owl%23%3E%0D%0A%0D%0Aselect+%3Fb++%28GROUP_CONCAT%28CONCAT%28%3Fg1%2C+%3Fg2%29+%3B+SEPARATOR+%3D+%22%2C+%22%29+AS+%3FStudentsNameAndSurname%29%0D%0Awhere+%0D%0A%7B++%0D%0A++++++++%3Fs+++owl%3AtargetIndividual+sw%3ATest_Front_End+.%0D%0A++++++++%3Fs+owl%3AsourceIndividual+%3Ff+.%0D%0A++++++++%3Ff+xmlns%3Aaccuracy+%3Fb+FILTER%28%3Fb+%3E+0.5%29++.%0D%0A++++++++%3Fw+%3Fh+%3Ff+.%0D%0A++++++++%3Fw+%3Fe+xmlns%3AstudentHasAttempt+.%0D%0A++++++++%3Fw+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sourceIndividual%3E+%3Ft+.%0D%0A%0D%0A++++%7B%3Ft+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2Fsurname%3E+%3Fg1%7D%0D%0A+++++++++UNION%0D%0A++++%7B%3Ft+%3Chttp%3A%2F%2Fpurl.org%2Fvocab%2Faiiso%2Fschema%23name%3E+%3Fg2%7D%0D%0A%7D%0D%0AGROUP+BY+%3Ft+%3Fb%0D%0AORDER+BY+DESC%28%3Fb%29";
+                    }
                     break;
 
                 case "4":
@@ -174,13 +243,32 @@ namespace Sotis2.Controllers
                     break;
 
                 case "6":
+                    // Question 6: Ispisati 15 predmeta sa najvećom razlikom fonda časova između predavanja i vežbi, u opadajucem poredku
+                    //             
+                    /*
+                        prefix owl: <http://www.owl-ontologies.com/travel.owl#>
+
+                        select (STRAFTER(str(?programme ), "-7/")) as ?programmeName 
+                                   ?fondOfLectures  as ?Lectures 
+                                   xsd:integer(SUBSTR(?fondOfExercisess, 0, 1)) as ?Exercisess 
+                                   abs((?fondOfLectures  - xsd:integer(SUBSTR(?fondOfExercisess, 0, 1)))) as ?Difference
+                        where 
+                        {  
+                              ?programme owl:Found_Lectures ?fondOfLectures .
+                              ?programme  owl:Found_Exercisess ?fondOfExercisess
+                        }
+                        ORDER BY DESC (abs((?fondOfLectures  - xsd:integer(SUBSTR(?fondOfExercisess, 0, 1)))))
+                        LIMIT 20
+
+                     */
+                    query = "prefix+owl%3A+%3Chttp%3A%2F%2Fwww.owl-ontologies.com%2Ftravel.owl%23%3E%0D%0A%0D%0Aselect+%28STRAFTER%28str%28%3Fprogramme+%29%2C+%22-7%2F%22%29%29+as+%3FprogrammeName+%0D%0A+++++++++++%3FfondOfLectures++as+%3FLectures+%0D%0A+++++++++++xsd%3Ainteger%28SUBSTR%28%3FfondOfExercisess%2C+0%2C+1%29%29+as+%3FExercisess+%0D%0A+++++++++++abs%28%28%3FfondOfLectures++-+xsd%3Ainteger%28SUBSTR%28%3FfondOfExercisess%2C+0%2C+1%29%29%29%29+as+%3FDifference%0D%0Awhere+%0D%0A%7B++%0D%0A++++++%3Fprogramme+owl%3AFound_Lectures+%3FfondOfLectures+.%0D%0A++++++%3Fprogramme++owl%3AFound_Exercisess+%3FfondOfExercisess%0D%0A%7D%0D%0AORDER+BY+DESC+%28abs%28%28%3FfondOfLectures++-+xsd%3Ainteger%28SUBSTR%28%3FfondOfExercisess%2C+0%2C+1%29%29%29%29%29%0D%0ALIMIT+20%0D%0A";
                     break;
 
             }
 
             // default-graph-uri=http%3A%2F%2Flocalhost%3A8890%2FTestIRIFinal2
 
-            return Redirect("http://localhost:8890/sparql?default-graph-uri=http%3A%2F%2Flocalhost%3A8890%2FTestIRIFinal4&query=" + query + "&format=text%2Fx-html%2Btr&debug=on&callback=func");
+            return Redirect("http://localhost:8890/sparql?default-graph-uri=http%3A%2F%2Flocalhost%3A8890%2FTestIRIFinal4&query=" + query + "&format=text%2Fx-html%2Btr&debug=on");
         }
     }
 }

@@ -1,0 +1,50 @@
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;Kontolna tačka 1">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >
+
+<owl:NamedIndividual rdf:about = "&untitled-ontology-7;Kontrolna tacka ISA">
+    <rdf:type rdf:resource = "&untitled-ontology-7;Test"/>
+    <startTimeOfTest rdf:datatype = "&xsd;dateTime">01/01/0001 00:00:00</startTimeOfTest>
+</owl:NamedIndividual >

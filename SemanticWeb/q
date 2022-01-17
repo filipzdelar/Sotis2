@@ -1,0 +1,194 @@
+prefix namespace: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+select * where {  <http://purl.org/vocab/aiiso/schema#Course> ?p ?o}
+
+
+travel:ESP_PointsPerCourse
+
+http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/Animacija_u_inženjerstvu
+
+
+
+
+Question1:	
+
+
+prefix owl: <http://www.owl-ontologies.com/travel.owl#>
+prefix travel: <http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/>
+prefix w3: <http://www.w3.org/2002/07/owl#>
+prefix aiiso: <http://purl.org/vocab/aiiso/schema#>
+
+select (STRAFTER(str(?programme ), "-7/")) as ?ProgrammeName COUNT(?programme) as ?Counter
+where 
+{  
+      ?course  ?v aiiso:Course 
+      FILTER(SUBSTR((STRAFTER(str(?course  ), "-7/")), 0 , 5) = "Izbor") .
+      ?courseNode w3:targetIndividual ?course .
+      ?courseNode  w3:sourceIndividual ?programme 
+       FILTER (?programme  != travel:Faculty_of_Technical_Sciences)
+}
+group by ?programme 
+
+Question2:	
+
+prefix owl: <http://www.owl-ontologies.com/travel.owl#>
+
+select (STRAFTER(str(?c), "-7/")) ?NumberOfESPPoints 
+where 
+{  
+      ?c
+      owl:ESP_PointsPerCourse  
+      ?NumberOfESPPoints  FILTER (?NumberOfESPPoints > 4  &&  ?NumberOfESPPoints < 7 ) 
+}
+
+Question3:	
+
+prefix travel: <http://www.owl-ontologies.com/travel.owl#>
+
+select COUNT(*) where { ?s ?p travel:programmeHas }
+
+-- dodati za svaki studijski program
+
+
+Question3:
+
+prefix sw: <http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix xmlns: <http://www.owl-ontologies.com/travel.owl#>
+
+select ?b  (GROUP_CONCAT(CONCAT(?g1, ?g2) ; SEPARATOR = ", ") AS ?StudentsNameAndSurname)
+where 
+{  
+        ?s   owl:targetIndividual sw:Test_Front_End .
+        ?s owl:sourceIndividual ?f .
+        ?f xmlns:accuracy ?b FILTER(?b > 0.5)  .
+        ?w ?h ?f .
+        ?w ?e xmlns:studentHasAttempt .
+        ?w <http://www.w3.org/2002/07/owl#sourceIndividual> ?t .
+
+    {?t <http://xmlns.com/foaf/0.1/surname> ?g1}
+         UNION
+    {?t <http://purl.org/vocab/aiiso/schema#name> ?g2}
+}
+GROUP BY ?t ?b
+ORDER BY ?b
+
+
+
+Question4:
+
+prefix sw: <http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix xmlns: <http://www.owl-ontologies.com/travel.owl#>
+
+select ROUND(AVG(?b)*100)/100 as ?Average
+where 
+{  
+        ?s   owl:targetIndividual sw:Test_Front_End .
+        ?s owl:sourceIndividual ?f .
+        ?f xmlns:accuracy ?b
+}
+
+
+Question5:	
+
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix sw: <http://www.owl-ontologies.com/travel.owl#>
+
+select (STRAFTER(str(?programme), "-7/") as ?programmeName) (COUNT(?programme) as ?howMany) 
+where 
+{  
+      ?o owl:assertionProperty sw:programmeHas .
+      ?o owl:sourceIndividual ?programme
+ }
+GROUP BY ?programme
+
+Question1:
+
+
+Question6:
+
+prefix owl: <http://www.owl-ontologies.com/travel.owl#>
+
+select (STRAFTER(str(?programme ), "-7/")) as ?programmeName 
+           ?fondOfLectures  as ?Lectures 
+           xsd:integer(SUBSTR(?fondOfExercisess, 0, 1)) as ?Exercisess 
+           abs((?fondOfLectures  - xsd:integer(SUBSTR(?fondOfExercisess, 0, 1)))) as ?Difference
+where 
+{  
+      ?programme owl:Found_Lectures ?fondOfLectures .
+      ?programme  owl:Found_Exercisess ?fondOfExercisess
+}
+ORDER BY DESC (abs((?fondOfLectures  - xsd:integer(SUBSTR(?fondOfExercisess, 0, 1)))))
+LIMIT 20
+
+
+
+
+----------------------------
+
+
+prefix travel: <http://www.owl-ontologies.com/travel.owl#>
+
+select * where {  ?s travel:startTimeOfTest ?p}
+
+
+
+GROUP BY ?c
+
+
+--- ZA bazu 
+default-graph-uri=http%3A%2F%2Flocalhost%3A8890%2FTestIRIFinal2
+
+
+prefix aiiso: <http://purl.org/vocab/aiiso/schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix travel: <http://www.owl-ontologies.com/travel.owl#>
+
+
+
+ {?n <http://xmlns.com/foaf/0.1/surname> ?g}
+UNION
+{?n <http://purl.org/vocab/aiiso/schema#name> ?g}
+
+
+------------------
+Imena svih studenta koja su polagala nesto
+------------------
+prefix aiiso: <http://purl.org/vocab/aiiso/schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix xmlns: <http://www.owl-ontologies.com/travel.owl#>
+
+select ?n (GROUP_CONCAT(CONCAT(?g1, ?g2) ; SEPARATOR = ", ") AS ?StudentsNameAndSurname)
+where 
+{  
+ ?o   ?p xmlns:attemptFromStudent .
+ ?o owl:targetIndividual ?n .
+    {?n <http://xmlns.com/foaf/0.1/surname> ?g1}
+         UNION
+    {?n <http://purl.org/vocab/aiiso/schema#name> ?g2}
+}
+GROUP BY ?n
+
+
+
+
+
+
+#1] Da li ima smisla praviti objektno relaciono mapiranje za sparql upite?
+
+Ontologije != Objekat
+Nema nasle]ivanja!
+
+pr. Za (A, B, ?) odgovara (A, B, F) i (A, B, H) - što ne možemo u objektnom
+
+Zaključivanje iz relativno nepotpunog skupa podataka
+Korsiti se mogućnost rezovanja za dobijanja implicitno dobijenih informacija (ne eksplicitne!)
+
+
+
+#2] Koja je razlika između SPAQRLa i SQLa?
+
+Matching nad grafu - Šta se dešava?
+Where klauza je grafoski patern - ima fiksni deo ima varijabilni deo - Trazi se podgraf koji odgovara zadatom podgrafu

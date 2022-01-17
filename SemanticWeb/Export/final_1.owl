@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#"
+     xml:base="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7">
+        <owl:imports rdf:resource="http://purl.org/vocab/aiiso/schema#"/>
+        <owl:imports rdf:resource="http://www.owl-ontologies.com/travel.owl"/>
+        <owl:imports rdf:resource="http://xmlns.com/foaf/0.1/"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#domainHasProblem -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#domainHasProblem">
+        <rdfs:subPropertyOf rdf:resource="http://purl.org/vocab/aiiso/schema#part_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasDomain -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasDomain">
+        <rdfs:subPropertyOf rdf:resource="http://purl.org/vocab/aiiso/schema#part_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasQuestion -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasQuestion">
+        <rdfs:subPropertyOf rdf:resource="http://purl.org/vocab/aiiso/schema#part_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#Attempt -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#Attempt"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Css -->
+
+    <rdf:Description rdf:about="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Css"/>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;NegativePropertyAssertion"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Css"/>
+        <owl:targetIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Web"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasDomain"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#HTML -->
+
+    <rdf:Description rdf:about="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#HTML"/>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;NegativePropertyAssertion"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#HTML"/>
+        <owl:targetIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#What_is_html?_"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasQuestion"/>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;NegativePropertyAssertion"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#HTML"/>
+        <owl:targetIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#What_is_div?"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasQuestion"/>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;NegativePropertyAssertion"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#HTML"/>
+        <owl:targetIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Web"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasDomain"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#JavaScript -->
+
+    <rdf:Description rdf:about="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#JavaScript"/>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;NegativePropertyAssertion"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#JavaScript"/>
+        <owl:targetIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#What_is_jQuery?"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasQuestion"/>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;NegativePropertyAssertion"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#JavaScript"/>
+        <owl:targetIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Web"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#problemHasDomain"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Web -->
+
+    <rdf:Description rdf:about="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Web"/>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;NegativePropertyAssertion"/>
+        <owl:targetIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#HTML"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Web"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#domainHasProblem"/>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;NegativePropertyAssertion"/>
+        <owl:targetIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#JavaScript"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Web"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#domainHasProblem"/>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;NegativePropertyAssertion"/>
+        <owl:targetIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Css"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Web"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/panonit/ontologies/2022/0/untitled-ontology-7#domainHasProblem"/>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+
