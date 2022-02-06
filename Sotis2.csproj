@@ -31,4 +31,8 @@
     <PackageReference Include="VisNetwork.Blazor" Version="0.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Export\" />
+  </ItemGroup>
+
 </Project>

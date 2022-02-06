@@ -14,6 +14,8 @@ using VDS.RDF;
 using VDS.RDF.Ontology;
 using VDS.RDF.Storage;
 using VDS.RDF.Writing;
+using System.IO;
+using System.Text;
 
 namespace Sotis2.Controllers
 {
@@ -144,7 +146,7 @@ namespace Sotis2.Controllers
         // POST: Tests/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
+
         /*[HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateFullTest([Bind("ID,TestDuration")] Test test)
@@ -217,7 +219,7 @@ namespace Sotis2.Controllers
             return PartialView("_AnswareEditor", new Answare());
         }
 
-        
+
         public ActionResult AddAnsware(int? k, int? i)
         {
             ViewBag.k = i;
@@ -314,7 +316,7 @@ namespace Sotis2.Controllers
             {
                 Course course = await _context.Courses.FindAsync(Convert.ToInt64(question.CourseID));
                 Test t = new Test(question.TestDuration, course, question.Name);
-                
+
                 _context.Tests.Add(t);
 
                 await _context.SaveChangesAsync();
@@ -347,11 +349,11 @@ namespace Sotis2.Controllers
             return PartialView("QuestionEditor", questionWithAnswaresDTO);
         }
 
-        public  ActionResult ExportRDF()
+        public ActionResult ExportRDF()
         {
             string path = "C:\\Users\\Panonit\\Desktop\\owlS\\ConvertTests\\exp_2.owl";
 
-            
+
 
             string fullPath = "http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7/"; // &untitled-ontology-7;
 
@@ -360,7 +362,7 @@ namespace Sotis2.Controllers
             {
                 using (StreamWriter sw = System.IO.File.AppendText(path))
                 {
-                    sw.WriteLine("<owl:NamedIndividual rdf:about = \""+fullPath + (test.Name ==null ? test.Name : test.Name.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath + (test.Name == null ? test.Name : test.Name.Replace(' ', '_')) + "\">");
                     sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Test\"/>");
                     sw.WriteLine("    <startTimeOfTest rdf:datatype = \"&xsd;dateTime\">" + test.StartOfTest + "</startTimeOfTest>");
                     sw.WriteLine("</owl:NamedIndividual >");
@@ -409,7 +411,7 @@ namespace Sotis2.Controllers
             {
                 using (StreamWriter sw = System.IO.File.AppendText(path))
                 {
-                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath +  (domain.Type == null ? domain.Type : domain.Type.Replace(' ', '_')) + "\">");
+                    sw.WriteLine("<owl:NamedIndividual rdf:about = \"" + fullPath + (domain.Type == null ? domain.Type : domain.Type.Replace(' ', '_')) + "\">");
                     sw.WriteLine("    <rdf:type rdf:resource = \"" + fullPath + "Domain\"/>");
                     sw.WriteLine("</owl:NamedIndividual >");
                 }
@@ -464,36 +466,6 @@ namespace Sotis2.Controllers
 
             IGraph g = new Graph();
 
-            //g.LoadFromFile(path);
-
-
-            //IGraph g = new Graph();
-
-
-            /*
-            IUriNode dotNetRDF = g.CreateUriNode(UriFactory.Create("http://www.dotnetrdf.org"));
-            IUriNode says = g.CreateUriNode(UriFactory.Create("http://example.org/says"));
-            ILiteralNode helloWorld = g.CreateLiteralNode("Hello World");
-            ILiteralNode bonjourMonde = g.CreateLiteralNode("Bonjour tout le Monde", "fr");
-
-            g.Assert(new Triple(dotNetRDF, says, helloWorld));
-            g.Assert(new Triple(dotNetRDF, says, bonjourMonde));*/
-
-            /*
-            var o = new OntologyGraph();
-            var lion = o.CreateOntologyClass(UriFactory.Create("http://my.taxonomies.com/myModel/Lion"));
-            lion.AddType(UriFactory.Create(OntologyHelper.OwlClass));
-            lion.AddLabel("Lion", "en");
-            var animals = o.CreateOntologyClass(UriFactory.Create("http://my.taxonomies.com/myModel/Animals"));
-            lion.AddSuperClass(animals);
-
-            o.CreateIndividual(new Uri("http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#kolokvijum_1"),
-                               new Uri("http://www.semanticweb.org/panonit/ontologies/2021/11/untitled-ontology-7#Test"));
-
-            RdfXmlWriter rdfxmlwriter = new RdfXmlWriter();
-            rdfxmlwriter.Save(o, "C:\\Users\\Panonit\\Desktop\\owlS\\ConvertTests\\Tests.owl");*/
-
-
 
             return Ok();
         }
@@ -502,12 +474,12 @@ namespace Sotis2.Controllers
         {
             //try
             //{
-                //VirtuosoManager manager = new VirtuosoManager();
+            //VirtuosoManager manager = new VirtuosoManager();
             //"MYDB", "dba", "dba"
 
             IGraph g = new Graph();
 
-                //virtuoso.LoadGraph(g, new Uri("http://example.org/"));
+            //virtuoso.LoadGraph(g, new Uri("http://example.org/"));
             //}
             //catch
             //{
@@ -532,7 +504,7 @@ namespace Sotis2.Controllers
 
             var questions = await _context.Questions.Where(x => x.Test.ID == id).ToListAsync();
 
-            List<List<int>> matrix = new List<List<int>>(); 
+            List<List<int>> matrix = new List<List<int>>();
 
             for (int i = 0; i < questions.Count(); i++)
             {
@@ -541,7 +513,7 @@ namespace Sotis2.Controllers
 
                 var allAtteptsIDs = await _context.TmpAnswares.Where(l => answerIDs.Any(id => id == l.AnswareID)).Select(e => e.AttemptID).Distinct().ToListAsync();
                 //var allAtteptsIDs = await _context.TmpAnswares.Where(y => y.WasChecked).OrderBy(z => z.AttemptID).Select(e => e.AttemptID).Distinct().ToListAsync();
-               // var allAttepts = await _context.Attempts.Where(l => allAtteptsIDs.Any(id => id == l.ID)).ToListAsync();//.OrderBy(l => allAtteptsIDs.IndexOf(l.ID));
+                // var allAttepts = await _context.Attempts.Where(l => allAtteptsIDs.Any(id => id == l.ID)).ToListAsync();//.OrderBy(l => allAtteptsIDs.IndexOf(l.ID));
 
                 if (matrix.Count == 0)
                 {
@@ -570,13 +542,13 @@ namespace Sotis2.Controllers
                     IsQuestinoRight = true;
                     for (int q = 0; q < tmpAnswers.Count; q++)
                     {
-                        if(allAtteptsIDs[j] == tmpAnswers[q].AttemptID)
+                        if (allAtteptsIDs[j] == tmpAnswers[q].AttemptID)
                         {
                             for (int a = 0; a < answers.Count(); a++)
                             {
-                                if ( answers[a].ID == tmpAnswers[q].AnswareID)
+                                if (answers[a].ID == tmpAnswers[q].AnswareID)
                                 {
-                                    if( answers[a].IsItTrue != tmpAnswers[q].WasChecked)
+                                    if (answers[a].IsItTrue != tmpAnswers[q].WasChecked)
                                     {
                                         IsQuestinoRight = false;
                                         goto nextOne;
@@ -606,6 +578,78 @@ namespace Sotis2.Controllers
             return Redirect("http://127.0.0.23:5001/iita?json=" + json);
 
             //return View(questions);
+        }
+
+        public async Task<IActionResult> Export(long? id)
+        {
+
+            var test = await _context.Tests
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            List<Question> questions = _context.Questions.Where(x => x.Test.ID == test.ID).ToList();
+
+            string text = "<?xml version = \"1.0\" encoding = \"utf-8\" ?>\n" +
+                "<qti-assessment-item\n" +
+                "xmlns = \"http://www.imsglobal.org/xsd/qti/imsqtiasi_v3p0\"\n" +
+                "xmlns:xsi = \"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "xsi:schemaLocation = \"http://www.imsglobal.org/xsd/imsqtiasi_v3p0 \n https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd\"\n" +
+                "identifier = \"firstexample\"\n" +
+                "time-dependent = \"false\"\n" +
+                "xml:lang = \"en-US\">\n";
+
+            string trueOne = "";
+            string score = "";
+            string body = "";
+
+            var rand = new Random();
+
+            int questionID = 0;
+
+            for (int i = 0; i < questions.Count(); i++)
+            {
+                body += "<p>" + questions[i].QuestionText + "</p>\n";
+
+                body += "<qti-item-body>\n" +
+                        "       <qti-choice-interaction max-choices = \"1\" min-choices = \"1\" response-identifier = \"RESPONSE\"> \n";
+
+                var answers = await _context.Answares.Where(x => x.QuestionID == questions[i].ID).ToListAsync();
+                for (int ans = 0; ans < answers.Count; ans++)
+                {
+                    if (answers[ans].IsItTrue)
+                    {
+                        trueOne += "<qti-response-declaration base-type = \"identifier\" cardinality = \"single\" identifier = \"RESPONSE\"\n>" +
+                                        "        <qti-correct-response>\n" +
+                                        "              <qti-value>  " + questionID.ToString() + " </qti-value>\n" +
+                                        "        </qti-correct-response>\n" +
+                                        "</qti-response-declaration>\n\n";
+
+                        score += "<qti-outcome-declaration base-type = \"float\" cardinality = \"single\" identifier = \"SCORE\">\n" +
+                                        "     <qti-default-value>\n" +
+                                        "            <qti-value> " + rand.Next(2)+1 + " </qti-value>\n" +
+                                        "      </qti-default-value>\n" +
+                                        "</qti-outcome-declaration>\n";
+                    }
+
+                    body += "            <qti-simple-choice identifier = \"" + questionID.ToString() + "\" >" + answers[ans].AnswareText + "</qti-simple-choice>\n";
+                    
+                    questionID++;
+                }
+
+                body += "      </qti-choice-interaction>\n";
+                body += "</qti-item-body>\n";
+            }
+
+            string end = "</qti-assessment-item>";
+
+
+
+            using (FileStream fs = System.IO.File.Create("C:\\Users\\Panonit\\Desktop\\Sotis\\Sotis2\\Sotis2\\Export\\export_" + DateTime.Now.ToString().Replace(":","_").Replace(" ", "_").Replace("/", "_").Replace("\\", "_") + ".xml"))
+            {
+                byte[] info = new UTF8Encoding(true).GetBytes(text + trueOne + score + body + end);
+                fs.Write(info, 0, info.Length);
+            }
+
+            return View();
         }
 
     }

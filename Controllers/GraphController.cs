@@ -65,7 +65,7 @@ namespace Sotis2.Controllers
             {
                 //source.Nodes[i].Name = "Q" + i.ToString();
                 source.Nodes[i].Name = domains[i].Type;
-                if (i == domains.Count()-1)
+                if (i == domains.Count() - 1)
                     break;
             }
             for (int i = source.Nodes.Count() - 1; i >= domains.Count(); i--)
@@ -76,7 +76,7 @@ namespace Sotis2.Controllers
 
             for (int i = source.Edges.Count() - 1; i >= 0; i--)
             {
-                if(i != 0)
+                if (i != 0)
                 {
                     source.Edges.RemoveAt(i);
                 }
@@ -88,49 +88,48 @@ namespace Sotis2.Controllers
 
                 }
             }
-            
-                //source.Edges = new List<Edge>();
-                /*
-                for (int i = 0; i < source.Edges.Count(); i++)
-                {
-                    if (i < source.Edges.Count() - 5)
-                    {
-                        source.Edges[i].From = source.Nodes[i].Id;
-                        source.Edges[i].To = source.Nodes[i + 1].Id;
-                        source.Edges[i].Name = "";
-                    }
-                    source.Edges[i].Name = "";
 
-                }*/
-
-                //source.Nodes = new List<Node>();
-                //source.Edges = new List<Edge>();
-                /*
-                for (int i = 0; i < domains.Count(); i++)
+            //source.Edges = new List<Edge>();
+            /*
+            for (int i = 0; i < source.Edges.Count(); i++)
+            {
+                if (i < source.Edges.Count() - 5)
                 {
-                    source.Nodes.Add(new Node());
-                    source.Nodes[i].Name = domains[i].Type;
-                }
-
-                for (int i = 0; i < 1; i++)
-                {
-                    source.Edges.Add(new Edge());
                     source.Edges[i].From = source.Nodes[i].Id;
                     source.Edges[i].To = source.Nodes[i + 1].Id;
                     source.Edges[i].Name = "";
-                }*/
+                }
+                source.Edges[i].Name = "";
 
-                var target = Converters.Convert(source);
+            }*/
+
+            //source.Nodes = new List<Node>();
+            //source.Edges = new List<Edge>();
+            /*
+            for (int i = 0; i < domains.Count(); i++)
+            {
+                source.Nodes.Add(new Node());
+                source.Nodes[i].Name = domains[i].Type;
+            }
+
+            for (int i = 0; i < 1; i++)
+            {
+                source.Edges.Add(new Edge());
+                source.Edges[i].From = source.Nodes[i].Id;
+                source.Edges[i].To = source.Nodes[i + 1].Id;
+                source.Edges[i].Name = "";
+            }*/
+
+            var target = Converters.Convert(source);
             // VIew
             return Ok(target);
             //return RedirectToPage("", target);// Ok(target); //View
         }
 
-
         [HttpGet("test")]
         public ActionResult<GraphDTO> Test(int id)
         {
-            long Testid = (long) id;//(long) _testID;
+            long Testid = (long)id;//(long) _testID;
             //Test test = _context.Tests.Find("1");
 
             List<Domain> domains = _context.Domains.ToList();
@@ -147,14 +146,14 @@ namespace Sotis2.Controllers
                     source.Nodes[i].Name = domains[i].Type;
                     source.Nodes[i].Id = (int)(domains[i].ID + 1000000);
                 }
-                else if( i <= domains.Count() + questions.Count() - 1)
+                else if (i <= domains.Count() + questions.Count() - 1)
                 {
                     source.Nodes[i].Name = questions[i - domains.Count()].QuestionText;
-                    source.Nodes[i].Id = (int) questions[i - domains.Count()].ID;
+                    source.Nodes[i].Id = (int)questions[i - domains.Count()].ID;
                 }
             }
 
-            
+
 
             for (int i = source.Nodes.Count() - 1; i >= domains.Count() + questions.Count(); i--)
             {
@@ -169,15 +168,15 @@ namespace Sotis2.Controllers
             {
                 if (i < edgeDDs.Count)
                 {
-                    source.Edges[i].From = (int)edgeDDs[i].DomainFromID;// source.Nodes[i].Id;
-                    source.Edges[i].To = (int)edgeDDs[i].DomainToID;
-                    source.Edges[i].Name = "nn";
+                    source.Edges[i].From = (int)edgeDDs[i].DomainFromID + 1000000;// source.Nodes[i].Id;
+                    source.Edges[i].To = (int)edgeDDs[i].DomainToID + 1000000;
+                    source.Edges[i].Name = "";
                 }
-                else if(i < edgeQDs.Count + edgeDDs.Count)
+                else if (i < edgeQDs.Count + edgeDDs.Count)
                 {
                     source.Edges[i].From = (int)edgeQDs[i - edgeDDs.Count].QuestionFromID;// source.Nodes[i].Id;
-                    source.Edges[i].To = (int)edgeQDs[i - edgeDDs.Count].DomainToID;
-                    source.Edges[i].Name = "eee";
+                    source.Edges[i].To = (int)edgeQDs[i - edgeDDs.Count].DomainToID + 1000000;
+                    source.Edges[i].Name = "";
 
                 }
                 else
@@ -191,7 +190,7 @@ namespace Sotis2.Controllers
             return Ok(target);
             //return RedirectToPage("", target);// Ok(target); //View
         }
-        
+
         public ActionResult ChangeDomain(int? id)
         {
             _testID = id;
@@ -200,7 +199,7 @@ namespace Sotis2.Controllers
 
             var source = service.GetGraphSchema("Nodes");
 
-            for(int i = 0; i < source.Nodes.Count(); i++)
+            for (int i = 0; i < source.Nodes.Count(); i++)
             {
                 //source.Nodes[i].Name = "Q" + i.ToString();
                 if (i <= domains.Count() - 1)
@@ -260,12 +259,14 @@ namespace Sotis2.Controllers
         {
             List<List<int>> edgesFromDS = new List<List<int>>();
             // [[0, 2], [1, 3], [2, 4], [3, 5], [4, 1], [4, 5]]
-            edgesFromDS.Add(new List<int>() { 0, 2 });
-            edgesFromDS.Add(new List<int>() { 1, 3 });
-            edgesFromDS.Add(new List<int>() { 2, 4 });
-            edgesFromDS.Add(new List<int>() { 3, 5 });
-            edgesFromDS.Add(new List<int>() { 4, 1 });
-            edgesFromDS.Add(new List<int>() { 4, 5 });
+            edgesFromDS.Add(new List<int>() { 0, 1 });
+            edgesFromDS.Add(new List<int>() { 1, 2 });
+
+            // 06/02/2022
+            //edgesFromDS.Add(new List<int>() { 1, 3 });
+            //edgesFromDS.Add(new List<int>() { 3, 5 });
+            //edgesFromDS.Add(new List<int>() { 4, 1 });
+            //edgesFromDS.Add(new List<int>() { 4, 5 });
             return edgesFromDS;
         }
 
@@ -278,7 +279,7 @@ namespace Sotis2.Controllers
             for (int i = 0; i < graph.Count; i++)
             {
 
-                if (LowerMilion(graph[i].id) > 1000000)
+                if (Int32.Parse(graph[i].id) > 1000000)
                 {
                     for (int j = 0; j < graph[i].connections.Count(); j++)
                     {
@@ -287,7 +288,7 @@ namespace Sotis2.Controllers
 
                         if (edgeDD == null)
                         {
-                            _context.EdgeDDs.Add(new EdgeDD(LowerMilion(graph[i].id), (long)graph[i].connections[j]));
+                            _context.EdgeDDs.Add(new EdgeDD(LowerMilion(graph[i].id), graph[i].connections[j] - 1000000));
                         }
                     }
                 }
@@ -301,17 +302,17 @@ namespace Sotis2.Controllers
 
                         if (edgeQD == null)
                         {
-                            _context.EdgeQDs.Add(new EdgeQD(LowerMilion(graph[i].id), (long)graph[i].connections[j]));
+                            _context.EdgeQDs.Add(new EdgeQD(LowerMilion(graph[i].id), graph[i].connections[j] - 1000000));
                         }
                     }
                 }
 
 
-                
+
             }
 
             await _context.SaveChangesAsync();
-            
+
 
             return Ok();
         }
@@ -344,8 +345,6 @@ namespace Sotis2.Controllers
                     source.Nodes[i].Name = questions[i - domains.Count()].QuestionText;
                 }
             }
-
-
 
             for (int i = source.Nodes.Count() - 1; i >= domains.Count() + questions.Count(); i--)
             {
@@ -453,6 +452,14 @@ namespace Sotis2.Controllers
             target.testID = graph.testID;
 
             return View(target); //View
+        }
+
+        [HttpGet("clear")]
+        public ActionResult Clear() 
+        {
+            _context.EdgeDDs.RemoveRange(_context.EdgeDDs.ToList());
+            _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }

@@ -24,8 +24,9 @@
     <partial class="partial" name="QuestionEditor" for="@Model.qWA[i]" />
 </div>
 }
+<div id="con"></div>
 <br />
-<input type="button" value="Add new question" id="AddQ" />
+<input type="button" value="Add new question" asp-for=@Model.qWA.Count id="AddQ" />
 <input type="submit" />
 
 }
@@ -45,9 +46,11 @@
                 success: function (data) {
                     str = JSON.stringify(data);
                     const newDiv = document.createElement("div");
-                    newDiv.id = i;
+                    newDiv.id = @Model.qWA.Count;
                     newDiv.innerHTML += data;
-                    $("#form_tests").append(newDiv);//.append(data); //f+(i-1)
+                    //newDiv.insertBefore($("form_tests"));
+                    $("#con").before(newDiv);
+                    //$().insertBefore(newDiv);//.append(data); //f+(i-1)
 
                     /*
                     did = document.getElementById("ID");

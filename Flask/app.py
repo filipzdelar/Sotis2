@@ -50,27 +50,22 @@ def create_app(test_config=None):
         y = json.loads(username, object_hook=lambda d: SimpleNamespace(**d))
         x = y[0]
         testID = y[1]
-        print(x)
         x = np.array(x).T.tolist()
         print(x)
         z = {}
         for y in range(len(x)):
             z["attempt" + str(y)] = x[y]
         
-        print(z)
         data_frame = pd.DataFrame(z)
-        print("ok")
+        
         print(z)
-        response = iita_exclude_transitive(data_frame, v=1)#.append("{ \"testID\" : "+str(y[1])+"}")
+        response = iita_exclude_transitive(data_frame, v=1)     #.append("{ \"testID\" : "+str(y[1])+"}")
         response["testId"] = testID
         print(response)
-
+        print("response")
         print(type(response))
         print((str(response).replace('(',"[").replace(')',"]").replace('array','')).replace('. ', '').replace('\'', '"'))
 
-        #return redirect("https://localhost:5001/api/graph/iita/"+(str(response).replace('(',"[").replace(')',"]").replace('array','')).replace('. ', '').replace('\'', '"'), code=200)
-        
         return redirect("https://localhost:5001/api/graph/IitaChangeDomain/"+(str(response).replace('(',"[").replace(')',"]").replace('array','')).replace('. ', '').replace('\'', '"'), code=200)
-        #return str(response) #+ str(username)
-    
+
     return app

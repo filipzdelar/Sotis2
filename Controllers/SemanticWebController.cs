@@ -259,14 +259,13 @@ namespace Sotis2.Controllers
                         }
                         ORDER BY DESC (abs((?fondOfLectures  - xsd:integer(SUBSTR(?fondOfExercisess, 0, 1)))))
                         LIMIT 20
-
+                    
                      */
                     query = "prefix+owl%3A+%3Chttp%3A%2F%2Fwww.owl-ontologies.com%2Ftravel.owl%23%3E%0D%0A%0D%0Aselect+%28STRAFTER%28str%28%3Fprogramme+%29%2C+%22-7%2F%22%29%29+as+%3FprogrammeName+%0D%0A+++++++++++%3FfondOfLectures++as+%3FLectures+%0D%0A+++++++++++xsd%3Ainteger%28SUBSTR%28%3FfondOfExercisess%2C+0%2C+1%29%29+as+%3FExercisess+%0D%0A+++++++++++abs%28%28%3FfondOfLectures++-+xsd%3Ainteger%28SUBSTR%28%3FfondOfExercisess%2C+0%2C+1%29%29%29%29+as+%3FDifference%0D%0Awhere+%0D%0A%7B++%0D%0A++++++%3Fprogramme+owl%3AFound_Lectures+%3FfondOfLectures+.%0D%0A++++++%3Fprogramme++owl%3AFound_Exercisess+%3FfondOfExercisess%0D%0A%7D%0D%0AORDER+BY+DESC+%28abs%28%28%3FfondOfLectures++-+xsd%3Ainteger%28SUBSTR%28%3FfondOfExercisess%2C+0%2C+1%29%29%29%29%29%0D%0ALIMIT+20%0D%0A";
                     break;
 
             }
 
-            // default-graph-uri=http%3A%2F%2Flocalhost%3A8890%2FTestIRIFinal2
 
             return Redirect("http://localhost:8890/sparql?default-graph-uri=http%3A%2F%2Flocalhost%3A8890%2FTestIRIFinal4&query=" + query + "&format=text%2Fx-html%2Btr&debug=on");
         }

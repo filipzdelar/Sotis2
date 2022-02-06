@@ -1,0 +1,24 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+<qti-assessment-item
+xmlns = "http://www.imsglobal.org/xsd/qti/imsqtiasi_v3p0"
+xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation = "http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+identifier = "firstexample"
+time-dependent = "false"
+xml:lang = "en-US"
+><p>What is html? </p>
+<qti-item-body>
+       <qti-choice-interaction max-choices = "1" min-choices = "1" response-identifier = "RESPONSE"> 
+            <qti-simple-choice identifier = 0 >a</qti-simple-choice>            <qti-simple-choice identifier = 1 >b</qti-simple-choice>            <qti-simple-choice identifier = 2 >c</qti-simple-choice>            <qti-simple-choice identifier = 3 >d</qti-simple-choice>            <qti-simple-choice identifier = 4 >e</qti-simple-choice>      </qti-choice-interaction>
+</qti-item-body>
+<p>What is css?</p>
+<qti-item-body>
+       <qti-choice-interaction max-choices = "1" min-choices = "1" response-identifier = "RESPONSE"> 
+            <qti-simple-choice identifier = 0 >t</qti-simple-choice>            <qti-simple-choice identifier = 1 >r</qti-simple-choice>            <qti-simple-choice identifier = 2 >e</qti-simple-choice>            <qti-simple-choice identifier = 3 >w</qti-simple-choice>            <qti-simple-choice identifier = 4 >q</qti-simple-choice>      </qti-choice-interaction>
+</qti-item-body>
+<p>What is js?</p>
+<qti-item-body>
+       <qti-choice-interaction max-choices = "1" min-choices = "1" response-identifier = "RESPONSE"> 
+            <qti-simple-choice identifier = 0 >b</qti-simple-choice>            <qti-simple-choice identifier = 1 >v</qti-simple-choice>            <qti-simple-choice identifier = 2 >c</qti-simple-choice>            <qti-simple-choice identifier = 3 >x</qti-simple-choice>            <qti-simple-choice identifier = 4 >z</qti-simple-choice>      </qti-choice-interaction>
+</qti-item-body>
+</qti-assessment-item>

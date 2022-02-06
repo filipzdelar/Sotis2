@@ -28,6 +28,8 @@
        onclick="exportNetwork()"
        value="export" />
 
+<button onclick="https://localhost:5001/api/graph/clear">Clear</button>
+
 
 <script type="text/javascript">
 
@@ -100,7 +102,7 @@
                 network = new vis.Network(container, data, options);
 
                 alert(network);
-              
+
             });
         })
         .catch((err) => {
@@ -121,7 +123,7 @@
             .then((response) => {
                 alert("Saved graph");
             });
-                
+
     }
 
     function objectToArray(obj) {
@@ -133,7 +135,7 @@
 
     function addConnections(elem, index) {
         // need to replace this with a tree of the network, then get child direct children of the element
-        elem.connections = network.getConnectedNodes(elem['id']);
+        elem.connections = network.getConnectedNodes(elem['id'], "from");
     }
 
     init();
