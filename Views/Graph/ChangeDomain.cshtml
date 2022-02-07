@@ -46,11 +46,18 @@
 <div id="mynetwork"></div>
 <button onclick="https://localhost:5001/api/graph/display">Load the graph</button>
 <button onclick="addMode()">Change Edges</button>
+<input type="button"
+       id="export_button"
+       onclick="exportNetwork()"
+       value="export" />
+
+<button onclick="https://localhost:5001/api/graph/clear">Clear</button>
 
 <script type="text/javascript">
 
-
-
+    function init() {
+        exportButton = document.getElementById("export_button");
+    }
 
     var container;
     var dataf;
@@ -112,8 +119,6 @@
                                 else {
                                     callback(data);
                                 }
-                                // after each adding you will be back to addEdge mode
-
                             }
                         }
                     };
@@ -121,12 +126,6 @@
                     var container = document.getElementById('mynetwork');
 
                     network = new vis.Network(container, data, options);
-                    // var network = new vis.Network(container, data, dsoptions);
-
-                    // here you init the addEdge mode
-
-
-
 
                 });
             })
@@ -134,6 +133,37 @@
                 alert("Fetching Graph Schema Failed: " + err);
             });
     }
+
+    function exportNetwork() {
+
+        var nodes = objectToArray(network.getPositions());
+
+        nodes.forEach(addConnections);
+
+
+        // pretty print node data
+        var exportValue = JSON.stringify(nodes, undefined, 2);
+
+        fetch('/api/graph/save/' + exportValue) //./schema
+            .then((response) => {
+                alert("Saved graph");
+            });
+
+    }
+
+    function objectToArray(obj) {
+        return Object.keys(obj).map(function (key) {
+            obj[key].id = key;
+            return obj[key];
+        });
+    }
+
+    function addConnections(elem, index) {
+        // need to replace this with a tree of the network, then get child direct children of the element
+        elem.connections = network.getConnectedNodes(elem['id'], "from");
+    }
+
+    init();
 
     handleGetJson();
     //var network = new vis.Network(container, data, options);

@@ -194,6 +194,64 @@ namespace Sotis2.Controllers
         public ActionResult ChangeDomain(int? id)
         {
             _testID = id;
+            /*
+            List<Domain> domains = _context.Domains.ToList();
+            List<Question> questions = _context.Questions.Where(x => x.Test.ID == _testID).ToList();
+
+            var source = service.GetGraphSchema("Nodes");
+
+            for (int i = 0; i < source.Nodes.Count(); i++)
+            {
+                //source.Nodes[i].Name = "Q" + i.ToString();
+                if (i <= domains.Count() - 1)
+                {
+
+                    source.Nodes[i].Name = domains[i].Type;
+                    source.Nodes[i].Id = (int)(domains[i].ID + 1000000);
+                }
+                else if (i <= domains.Count() + questions.Count() - 1)
+                {
+                    source.Nodes[i].Name = questions[i - domains.Count()].QuestionText;
+                    source.Nodes[i].Id = (int)questions[i - domains.Count()].ID;
+                }
+            }
+
+
+
+            for (int i = source.Nodes.Count() - 1; i >= domains.Count() + questions.Count(); i--)
+            {
+                source.Nodes.RemoveAt(i);
+            }
+
+
+            List<EdgeDD> edgeDDs = _context.EdgeDDs.ToList();
+            List<EdgeQD> edgeQDs = _context.EdgeQDs.ToList();
+
+            for (int i = source.Edges.Count() - 1; i >= 0; i--)
+            {
+                if (i < edgeDDs.Count)
+                {
+                    source.Edges[i].From = (int)edgeDDs[i].DomainFromID + 1000000;// source.Nodes[i].Id;
+                    source.Edges[i].To = (int)edgeDDs[i].DomainToID + 1000000;
+                    source.Edges[i].Name = "";
+                }
+                else if (i < edgeQDs.Count + edgeDDs.Count)
+                {
+                    source.Edges[i].From = (int)edgeQDs[i - edgeDDs.Count].QuestionFromID;// source.Nodes[i].Id;
+                    source.Edges[i].To = (int)edgeQDs[i - edgeDDs.Count].DomainToID + 1000000;
+                    source.Edges[i].Name = "";
+
+                }
+                else
+                {
+                    source.Edges.RemoveAt(i);
+                }
+            }
+
+            var target = Converters.Convert(source);
+            // VIew
+            return View(target);*/
+            
             List<Domain> domains = _context.Domains.ToList();
             List<Question> questions = _context.Questions.Where(x => x.Test.ID == id).ToList();
 
@@ -240,6 +298,7 @@ namespace Sotis2.Controllers
             target.testID = id;
 
             return View(target); //View
+            
         }
 
         [HttpGet("saveaload")]
@@ -281,20 +340,50 @@ namespace Sotis2.Controllers
 
                 if (Int32.Parse(graph[i].id) > 1000000)
                 {
-                    for (int j = 0; j < graph[i].connections.Count(); j++)
+                    for (int p = 0; p < graph.Count; p++)
                     {
+                        for (int s = 0; s < graph[p].connections.Count(); s++)
+                        {
+
+                            if (graph[p].connections[s] == Int32.Parse(graph[i].id))
+                            {
+                                EdgeDD edgeDD = _context.EdgeDDs.Where(x => x.DomainFromID == LowerMilion(graph[p].id) && x.DomainToID == LowerMilion(graph[i].id)).FirstOrDefault();
+                                //EdgeDD edgeDD2 = _context.EdgeDDs.Where(x => x.DomainFromID == LowerMilion(graph[i].id) && x.DomainToID == LowerMilion(graph[p].id)).FirstOrDefault();
+
+                                if (edgeDD == null)//&& edgeDD2 == null
+                                {
+                                    _context.EdgeDDs.Add(new EdgeDD(LowerMilion(graph[p].id), LowerMilion(graph[i].id)));
+                                }
+                            }
+                        }
+
                         //Domain domainTo = await _context.Domains.FindAsync(graph[i].connections[j]);
-                        EdgeDD edgeDD = _context.EdgeDDs.Where(x => x.DomainFromID == LowerMilion(graph[i].id) && x.DomainToID == graph[i].connections[j]).FirstOrDefault();
+                        /*EdgeDD edgeDD = _context.EdgeDDs.Where(x => x.DomainFromID == LowerMilion(graph[i].id) && x.DomainToID == graph[i].connections[j]).FirstOrDefault();
 
                         if (edgeDD == null)
                         {
                             _context.EdgeDDs.Add(new EdgeDD(LowerMilion(graph[i].id), graph[i].connections[j] - 1000000));
-                        }
+                        }*/
                     }
                 }
                 else
                 {
+                    for (int j = 0; j < graph.Count; j++)
+                    {
+                        for (int k = 0; k < graph[j].connections.Count(); k++)
+                        {
+                            if(graph[j].connections[k] == Int32.Parse(graph[i].id))
+                            {
+                                EdgeQD edgeQD = _context.EdgeQDs.Where(x => x.QuestionFromID == Int32.Parse(graph[i].id) && x.DomainToID == (Int32.Parse(graph[j].id) - 1000000)).FirstOrDefault();
 
+                                if (edgeQD == null)
+                                {
+                                    _context.EdgeQDs.Add(new EdgeQD(Int32.Parse(graph[i].id), Int32.Parse(graph[j].id) - 1000000));
+                                }
+                            }
+                        }
+                    }
+                    /*
                     for (int j = 0; j < graph[i].connections.Count(); j++)
                     {
                         //Domain domainTo = await _context.Domains.FindAsync(graph[i].connections[j]);
@@ -304,8 +393,8 @@ namespace Sotis2.Controllers
                         {
                             _context.EdgeQDs.Add(new EdgeQD(LowerMilion(graph[i].id), graph[i].connections[j] - 1000000));
                         }
+                    }*/
                     }
-                }
 
 
 
