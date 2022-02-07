@@ -1,0 +1,57 @@
+﻿@model Sotis2.Models.DTO.IdDTO
+
+@{
+    ViewData["Title"] = "CreateFullTest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Create</h1>
+
+<h4>Question</h4>
+
+<!--<input asp-for="Model.Id" class="form-control" id="form_number" />
+<a asp-action="CreateFullTestNumber" asp-route-id="item.ID">Create New</a>-->
+
+
+@using (Html.BeginForm())
+{
+    <div class="editor-row">
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Id)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Id)
+        </div>
+    </div>
+    <input type="submit" value="submit" />
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#Button1').on('click', function (event) {
+                $.ajax({
+                    type: 'GET',
+                    url: "https://localhost:5001/Tests/CreateFullTestAsync",
+                    data: $("#Text1").val(),
+                    success: function (result) {
+                        console.log(result);
+                    },
+                    error: function (errorResult) {
+                        console.log(result);
+                    }
+                });
+            });
+
+
+        });
+
+    </script>
+}

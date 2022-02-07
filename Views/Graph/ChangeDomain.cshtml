@@ -72,11 +72,11 @@
         network.addEdgeMode();
     }
 
-    function handleGetJson() {
-        const urlParams = new URLSearchParams(window.location.search);
+    //function handleGetJson() {
+        //const urlParams = new URLSearchParams(window.location.search);
         //const myParam = urlParams.get('id_test');
-        var x = document.getElementById("id_test").textContent;
-        alert(x);
+    var x = document.getElementById("id_test").textContent;
+    //alert(x.toString());
         fetch('/api/graph/test?id=' + x.toString()) //../schema
             .then((response) => {
                 // Now process the JSON:
@@ -85,11 +85,14 @@
                 response.json().then((data) => {
                     // Log the data :  api/graph/
                     console.log(data);
-
+                    //alert(data);
                     nodes = data['nodes'];
                     dataf = data;
 
-                    data['nodes'] = new vis.DataSet(data['nodes']);
+                    //data['nodes'] = new vis.DataSet(data['nodes']);
+                    for (i = 0; i < data['edges'].length; i++) {
+                        data["edges"][i]["color"] = { color: "blue" }
+                    }
                     // Now display the graph using vis.js:
                     var options = {
                         edges: {
@@ -122,9 +125,17 @@
                             }
                         }
                     };
-
                     var container = document.getElementById('mynetwork');
+                    //alert(dataf['nodes'][i]);
+                    for (i = 0; i < dataf['nodes'].length; i++) { //
+                        if (i < 8) {
+                            dataf['nodes'][i]["shape"] = "square";
+                        }
+                        else {
+                            dataf['nodes'][i]["shape"] = "ellipse";
 
+                        }
+                    }
                     network = new vis.Network(container, data, options);
 
                 });
@@ -132,7 +143,6 @@
             .catch((err) => {
                 alert("Fetching Graph Schema Failed: " + err);
             });
-    }
 
     function exportNetwork() {
 
@@ -165,7 +175,6 @@
 
     init();
 
-    handleGetJson();
     //var network = new vis.Network(container, data, options);
 
 

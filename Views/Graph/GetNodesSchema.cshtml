@@ -49,7 +49,10 @@
                 nodes = data['nodes'];
                 dataf = data;
 
-                data['nodes'] = new vis.DataSet(data['nodes']);
+                //data['nodes'] = new vis.DataSet(data['nodes']);
+                for (i = 0; i < data['edges'].length; i++) {
+                    data["edges"][i]["color"] = { color: "blue" }
+                }
                 // Now display the graph using vis.js:
                 var options = {
                     edges: {
@@ -86,6 +89,16 @@
                 };
 
                 var container = document.getElementById('mynetwork');
+
+                for (i = 0; i < dataf['nodes'].length; i++) { //
+                    if (i < 8) {
+                        dataf['nodes'][i]["shape"] = "square";
+                    }
+                    else {
+                        dataf['nodes'][i]["shape"] = "ellipse";
+
+                    }
+                }
 
                 network = new vis.Network(container, data, options);
                 // var network = new vis.Network(container, data, dsoptions);

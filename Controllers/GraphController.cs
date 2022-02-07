@@ -59,7 +59,7 @@ namespace Sotis2.Controllers
 
             List<Domain> domains = _context.Domains.ToList();
 
-            var source = service.GetGraphSchema("Nodes");
+            var source = GetNodesAndEdges();
 
             for (int i = 0; i < source.Nodes.Count(); i++)
             {
@@ -122,6 +122,19 @@ namespace Sotis2.Controllers
 
             var target = Converters.Convert(source);
             // VIew
+            for (int j = 0; j < target.Nodes.Count(); j++)
+            {
+                if (j < 3)
+                {
+                    target.Nodes[j].Color = "red";
+                }
+                else
+                {
+                    target.Nodes[j].Color = "blue";
+
+                }
+            }
+
             return Ok(target);
             //return RedirectToPage("", target);// Ok(target); //View
         }
@@ -134,8 +147,7 @@ namespace Sotis2.Controllers
 
             List<Domain> domains = _context.Domains.ToList();
             List<Question> questions = _context.Questions.Where(x => x.Test.ID == Testid).ToList();
-
-            var source = service.GetGraphSchema("Nodes");
+            Graph source = GetNodesAndEdges();
 
             for (int i = 0; i < source.Nodes.Count(); i++)
             {
@@ -187,8 +199,51 @@ namespace Sotis2.Controllers
 
             var target = Converters.Convert(source);
             // VIew
+
+            for (int j = 0; j < target.Nodes.Count(); j++)
+            {
+                if (j < 3)
+                {
+                    target.Nodes[j].Color = "red";
+                }
+                else
+                {
+                    target.Nodes[j].Color = "blue";
+
+                }
+            }
+
             return Ok(target);
             //return RedirectToPage("", target);// Ok(target); //View
+        }
+
+        private Graph GetNodesAndEdges()
+        {
+            Graph g = service.GetGraphSchema("Nodes");
+            Graph g1 = service.GetGraphSchema("Nodes");
+            Graph g2 = service.GetGraphSchema("Nodes");
+            Graph g3 = service.GetGraphSchema("Nodes");
+            Graph g4 = service.GetGraphSchema("Nodes");
+            for (int gid = 0; gid < g1.Edges.Count; gid++)
+            {
+                g.Edges.Add(g1.Edges[gid]);
+                g.Edges.Add(g2.Edges[gid]);
+
+                g.Edges.Add(g3.Edges[gid]);
+                g.Edges.Add(g4.Edges[gid]);
+            }
+
+            for (int gid2 = 0; gid2 < g1.Nodes.Count; gid2++)
+            {
+                g.Nodes.Add(g1.Nodes[gid2]);
+                g.Nodes.Add(g2.Nodes[gid2]);
+
+                g.Nodes.Add(g3.Nodes[gid2]);
+                g.Nodes.Add(g4.Nodes[gid2]);
+
+
+            }
+            return g;
         }
 
         public ActionResult ChangeDomain(int? id)
@@ -255,7 +310,7 @@ namespace Sotis2.Controllers
             List<Domain> domains = _context.Domains.ToList();
             List<Question> questions = _context.Questions.Where(x => x.Test.ID == id).ToList();
 
-            var source = service.GetGraphSchema("Nodes");
+            var source = GetNodesAndEdges();
 
             for (int i = 0; i < source.Nodes.Count(); i++)
             {
@@ -296,6 +351,19 @@ namespace Sotis2.Controllers
             GraphDTO target = Converters.Convert(source);
             //GraphDTO target2 = new GraphDTO();
             target.testID = id;
+
+            for (int j = 0; j < target.Nodes.Count(); j++)
+            {
+                if (j < 3)
+                {
+                    target.Nodes[j].Color = "red";
+                }
+                else
+                {
+                    target.Nodes[j].Color = "blue";
+
+                }
+            }
 
             return View(target); //View
             
@@ -347,12 +415,12 @@ namespace Sotis2.Controllers
 
                             if (graph[p].connections[s] == Int32.Parse(graph[i].id))
                             {
-                                EdgeDD edgeDD = _context.EdgeDDs.Where(x => x.DomainFromID == LowerMilion(graph[p].id) && x.DomainToID == LowerMilion(graph[i].id)).FirstOrDefault();
+                                EdgeDD edgeDD = _context.EdgeDDs.Where(x => x.DomainFromID == LowerMilion(graph[i].id) && x.DomainToID == LowerMilion(graph[p].id)).FirstOrDefault();
                                 //EdgeDD edgeDD2 = _context.EdgeDDs.Where(x => x.DomainFromID == LowerMilion(graph[i].id) && x.DomainToID == LowerMilion(graph[p].id)).FirstOrDefault();
 
                                 if (edgeDD == null)//&& edgeDD2 == null
                                 {
-                                    _context.EdgeDDs.Add(new EdgeDD(LowerMilion(graph[p].id), LowerMilion(graph[i].id)));
+                                    _context.EdgeDDs.Add(new EdgeDD(LowerMilion(graph[i].id), LowerMilion(graph[p].id)));
                                 }
                             }
                         }
@@ -546,8 +614,13 @@ namespace Sotis2.Controllers
         [HttpGet("clear")]
         public ActionResult Clear() 
         {
-            _context.EdgeDDs.RemoveRange(_context.EdgeDDs.ToList());
-            _context.SaveChangesAsync();
+            List<EdgeDD> edgeDDs = _context.EdgeDDs.ToList();
+            foreach (EdgeDD edge in edgeDDs)
+            {
+                _context.EdgeDDs.Remove(edge);
+                _context.SaveChanges();
+            }
+            //_context.EdgeDDs.RemoveRange();
             return Ok();
         }
     }

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Sotis2.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

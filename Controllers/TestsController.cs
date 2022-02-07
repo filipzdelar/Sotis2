@@ -122,23 +122,23 @@ namespace Sotis2.Controllers
             question.Answares = new List<Answare>();
 
             Answare answare = new Answare();
-            answare.AnswareText = "Answare text 1";
+            answare.AnswareText = "";
             question.Answares.Add(answare);
 
             answare = new Answare();
-            answare.AnswareText = "Answare text 2";
+            answare.AnswareText = "";
             question.Answares.Add(answare);
 
             answare = new Answare();
-            answare.AnswareText = "Answare text 3";
+            answare.AnswareText = "";
             question.Answares.Add(answare);
 
             answare = new Answare();
-            answare.AnswareText = "Answare text 4";
+            answare.AnswareText = "";
             question.Answares.Add(answare);
 
             answare = new Answare();
-            answare.AnswareText = "Answare text 5";
+            answare.AnswareText = "";
             question.Answares.Add(answare);
             return question;
         }
@@ -272,28 +272,40 @@ namespace Sotis2.Controllers
         /// //////////////////////////////////////////////////////////////////////////////////////////
         /// </summary>
 
+        public ActionResult CreateFullTestNumber()
+        {
+            IdDTO idDTO = new IdDTO();
+            idDTO.Id = 1;
+            return View(idDTO);
+        }
 
         // GET: Questions/Create
-        public async Task<IActionResult> CreateFullTestAsync()
+        [HttpPost]
+        public IActionResult CreateFullTestNumber(IdDTO idDTO)
+        {
+            string url = "https://localhost:5001/Tests/CreateFullTest?id=" + idDTO.Id;
+
+            return Redirect(url);
+        }
+
+        public async Task<IActionResult> CreateFullTestAsync(int id)
         {
 
             TestQuestionAnswerDTO testDTO = new TestQuestionAnswerDTO();
             testDTO.qWA = new List<QuestionWithAnswaresDTO>();
 
-            QuestionWithAnswaresDTO question = CreateTmpQuestion();
-            question.ID = 1;
-            testDTO.qWA.Add(question);
+            QuestionWithAnswaresDTO question; 
 
-            question = CreateTmpQuestion();
-            question.ID = 2;
-            testDTO.qWA.Add(question);
-
-            question = CreateTmpQuestion();
-            question.ID = 3;
-            testDTO.qWA.Add(question);
+            for (int i = 0; i < id; i++)
+            {
+                question = CreateTmpQuestion();
+                question.ID = i + 1;
+                testDTO.qWA.Add(question);
+            }
 
             testDTO.Courses = new List<SelectListItem>();
             List<Course> courses = await _context.Courses.ToListAsync();
+
             foreach (Course course in courses)
             {
                 testDTO.Courses.Add(new SelectListItem(course.Name, course.ID.ToString()));

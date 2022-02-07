@@ -28,7 +28,7 @@
        onclick="exportNetwork()"
        value="export" />
 
-<button onclick="https://localhost:5001/api/graph/clear">Clear</button>
+<a href="https://localhost:5001/api/graph/clear">Clear</a>
 
 
 <script type="text/javascript">
@@ -56,14 +56,23 @@
         .then((response) => {
             // Now process the JSON:
             response.json().then((data) => {
-                alert("yes")
                 // Log the data :  api/graph/
                 console.log(data);
 
                 nodes = data['nodes'];
                 dataf = data;
 
-                data['nodes'] = new vis.DataSet(data['nodes']);
+                //data['nodes'] = new vis.DataSet(data['nodes']);
+
+                for (i = 0; i < data['edges'].length; i++) {
+                    data["edges"][i]["color"] = { color: "blue" }
+                }
+
+                for (i = 0; i < nodes.length; i++) {
+                    nodes[i]["color"] = { color: "blue" }
+                }
+
+                
                 // Now display the graph using vis.js:
                 var options = {
                     edges: {
@@ -99,6 +108,10 @@
 
                 var container = document.getElementById('mynetwork');
 
+                alert(dataf['nodes'][i]);
+                for (i = 0; i < data['nodes'].length; i++) {
+                    dataf['nodes'][i]["shape"] = "square";
+                }
                 network = new vis.Network(container, data, options);
 
             });
