@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.OrTools.Sat;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,7 +15,7 @@ using Sotis2.Models.Users;
 
 namespace Sotis2.Controllers
 {
-    public class AttemptsController : Controller
+    public class AttemptsController : AttemptsControllerBase, Controller
     {
         private readonly DBContext _context;
         private readonly UserManager<AppUser> _userManager;
@@ -156,125 +157,32 @@ namespace Sotis2.Controllers
             return _context.Attempts.Any(e => e.ID == id);
         }
 
-
-        
-
-        public async Task<IActionResult> StartAttempt(long? id)
+        public class VarArraySolutionPrinter : CpSolverSolutionCallback
         {
-
-            if (id == null)
+            public VarArraySolutionPrinter(IntVar[] variables)
             {
-                return NotFound();
+                variables_ = variables;
             }
 
-            var test = await _context.Tests.FindAsync(id);
-            List<Question> questionsInChaos = await _context.Questions.Where(x => x.Test.ID == test.ID).ToListAsync();
-            AttemptDTO attemptDTO = await PreprocessQuestionsAsync(questionsInChaos);
-            if (test == null)
+            public override void OnSolutionCallback()
             {
-                return NotFound();
-            }
-            return View(attemptDTO);
-        }
-
-        private async Task<AttemptDTO> PreprocessQuestionsAsync(List<Question> questionsInChaos)
-        {
-            Attempt attempt = new Attempt();
-            attempt.StartTime = DateTime.Now;
-            _context.Add(attempt);
-            await _context.SaveChangesAsync();
-
-            AttemptDTO attemptDTO = new AttemptDTO();
-            attemptDTO.TmpQuestionDTOs = new List<TmpQuestionDTO>();
-
-            List<Question> questionsInOrder = questionsInChaos; //OrderAsync
-            List<Answare> answares = new List<Answare>();
-
-            foreach (Question question in questionsInOrder)
-            {
-                TmpQuestionDTO tmpQuestionDTO = new TmpQuestionDTO();
-                tmpQuestionDTO.QuestionText = question.QuestionText;
-                tmpQuestionDTO.TmpAnswaresDTO = new List<TmpAnsware>();
-
-                answares = await _context.Answares.Where(x => x.QuestionID == question.ID).ToListAsync();
-
-                foreach (Answare answare in answares)
                 {
-                    TmpAnsware tmpAnsware = new TmpAnsware();
-                    tmpAnsware.AnswareText = answare.AnswareText;
-                    tmpAnsware.WasChecked = false;
-                    tmpAnsware.AnswareID = answare.ID;
-                    tmpAnsware.AttemptID = attempt.ID;
-
-                    _context.Add(tmpAnsware);
-                    await _context.SaveChangesAsync();
-
-                    tmpQuestionDTO.TmpAnswaresDTO.Add(tmpAnsware);
-                }
-
-                attemptDTO.TmpQuestionDTOs.Add(tmpQuestionDTO);
-            }
-
-            attemptDTO.TmpSerialQuestion = 0;
-            attemptDTO.TotalNumberOfQuestions = attemptDTO.TmpQuestionDTOs.Count();
-
-            return attemptDTO;
-        }
-
-        private async Task<List<Question>> OrderAsync(List<Question> questionsInChaos)
-        {
-            List<Domain> domains = await _context.Domains.ToListAsync();
-            List<EdgeDD> edgeDDs = await _context.EdgeDDs.ToListAsync();
-            List<EdgeQD> edgeQDs = await _context.EdgeQDs.ToListAsync();
-
-            //int[,] matrix = new int[questionsInChaos.Count + domains.Count, questionsInChaos.Count + domains.Count];
-            int[,] matrix = new int[domains.Count, domains.Count];
-
-            for (int e = 0; e < edgeDDs.Count; e++)
-            {
-                for (int d = 0; d < domains.Count; d++)
-                {
-                    if (edgeDDs[e].DomainFromID == domains[d].ID)
+                    Console.WriteLine(String.Format("Solution #{0}: time = {1:F2} s", solution_count_, WallTime()));
+                    foreach (IntVar v in variables_)
                     {
-                        for (int d2 = 0; d2 < domains.Count; d2++)
-                        {
-                            if(edgeDDs[e].DomainToID == domains[d2].ID)
-                            {
-                                matrix[d, d2] = 1;
-                            }
-                        }
+                        Console.WriteLine(String.Format("  {0} = {1}", v.ShortString(), Value(v)));
                     }
+                    solution_count_++;
                 }
             }
 
-            List<int> ord = new List<int>();
-            bool hasNonNegativeValues = true;
-            bool hasNotZeroes = true;
-            
-            while(hasNonNegativeValues) 
+            public int SolutionCount()
             {
-                hasNonNegativeValues = false;
-                for (int d = 0; d < domains.Count; d++)
-                {
-                    hasNotZeroes = true;
-                    for (int d2 = 0; d2 < domains.Count; d2++)
-                    {
-                        if(matrix[d2, d] == 1)
-                        {
-                            hasNonNegativeValues = true;
-                            hasNotZeroes = false;
-                            break;
-                        }
-
-                        if (matrix[d2, d] == 0)
-                        {
-                            hasNonNegativeValues = true;
-                        }
-                    }
-                } 
+                return solution_count_;
             }
-            
-            return questionsInChaos;
+
+            private int solution_count_;
+            private IntVar[] variables_;
         }
 
         /*
